@@ -40,21 +40,21 @@
       <label>{{ __('Sign up as') }}</label>
       <div>
         <input type="radio" id="talent" name="user_type"
-          value="Talent" required>
+          value="talent" required>
         <label for="talent">{{ __('Talent') }}</label>
       </div>
 
       <div
         onclick="document.querySelector('.form2').style.display = 'block'">
         <input type="radio" id="company" name="user_type"
-          value="Company" required>
+          value="company" required>
         <label for="company">{{ __('Company') }}</label>
         {{-- form --}}
       </div>
 
       <div>
         <input type="radio" id="individual" name="user_type"
-          value="Individual" required>
+          value="individual" required>
         <label for="individual">{{ __('Individual')
           }}</label>
 

@@ -15,7 +15,7 @@ return new class extends Migration
       $table->id();
       $table->string('email')->unique();
       $table->string('password');
-      $table->enum('user_type', ['Talent', 'Company', 'Individual', 'Admin']);
+      $table->enum('user_type', ['talent', 'company', 'individual', 'admin']);
       $table->rememberToken();
       $table->timestamps();
       $table->timestamp('email_verified_at')->nullable();

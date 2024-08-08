@@ -16,7 +16,7 @@ return new class extends Migration
           $table->foreignId('company_id')->constrained('users')->cascadeOnDelete();
           $table->string('title');
           $table->text('description');
-          $table->json('required_skills')->nullable();
+          $table->string('required_skills')->nullable();
           $table->string('location')->nullable();
           $table->string('salary_range')->nullable();
           $table->enum('job_type', ['Full-time', 'Part-time', 'Contract']);

@@ -14,14 +14,19 @@ class Talent_profile extends Model
   ];
 
   protected $casts = [
-    'skills' => 'array',
-    'experience' => 'array',
-    'education' => 'array',
+    'skills' => 'array', // Cast skills as an array
+    'experience' => 'array', // Cast experience as an array
+    'education' => 'array', // Cast education as an array
     'portfolio' => 'array',
   ];
 
-  public function userProfile()
+  public function userprofile()
   {
-    return $this->belongsTo(User_profile::class);
+    return $this->belongsTo(User_profile::class, 'user_profile_id', 'id');
   }
+  public function user()
+  {
+    return $this->belongsTo(User::class);
+  }
+
 }

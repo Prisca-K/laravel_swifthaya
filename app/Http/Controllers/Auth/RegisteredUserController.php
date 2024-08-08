@@ -37,7 +37,7 @@ class RegisteredUserController extends Controller
       'last_name' => ['required', 'string', 'min:3', 'max:20'],
       'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
       'password' => ['required', 'confirmed', Rules\Password::defaults()],
-      'user_type' => ['required', 'in:Talent,Company,Individual'],
+      'user_type' => ['required', 'in:talent,company,individual'],
 
     ]);
 
@@ -60,12 +60,12 @@ class RegisteredUserController extends Controller
 
     Auth::login($user);
 
-    if ($user->user_type === "Company") {
+    if ($user->user_type === "company") {
       return redirect(route('company.dashboard', $user->id));
-    } elseif ($user->user_type === "Individual") {
+    } elseif ($user->user_type === "individual") {
       return redirect(route('individual.dashboard', $user->id));
-    } else return redirect(route('talent.dashboard', $user->id));
-
-    // return redirect(route('dashboard', absolute: false));
+    } elseif ($user->user_type === "talent") {
+      return redirect(route('talent.dashboard', $user->id));
+    } else return redirect(route('dashboard', $user->id));
   }
 }

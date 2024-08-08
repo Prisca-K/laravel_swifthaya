@@ -28,11 +28,13 @@
           <x-slot name="trigger">
             <button
               class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+              @auth
               <div>
                 {{ Auth::user()->userprofile->first_name . "
                 " .
                 Auth::user()->userprofile->last_name}}
               </div>
+              @endauth
 
               <div class="ms-1">
                 <svg class="fill-current h-4 w-4"
@@ -47,9 +49,7 @@
           </x-slot>
 
           <x-slot name="content">
-            <x-dropdown-link :href="route('profile.edit')">
-              {{ __('Profile') }}
-            </x-dropdown-link>
+          
 
             <!-- Authentication -->
             <form method="POST"
@@ -99,6 +99,8 @@
     </div>
 
     <!-- Responsive Settings Options -->
+    @auth
+        
     <div
       class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
       <div class="px-4">
@@ -112,10 +114,10 @@
       </div>
 
       <div class="mt-3 space-y-1">
-        <x-responsive-nav-link
+        {{-- <x-responsive-nav-link
           :href="route('profile.edit')">
           {{ __('Profile') }}
-        </x-responsive-nav-link>
+        </x-responsive-nav-link> --}}
 
         <!-- Authentication -->
         <form method="POST" action="{{ route('logout') }}">
@@ -129,5 +131,6 @@
         </form>
       </div>
     </div>
+    @endauth
   </div>
 </nav>
