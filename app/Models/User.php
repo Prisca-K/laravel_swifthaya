@@ -42,15 +42,27 @@ class User extends Authenticatable
   {
     return [
       'email_verified_at' => 'datetime',
-      'password' => 'hashed',
+      // 'password' => 'hashed',
     ];
   }
   public function userprofile()
   {
     return $this->hasOne(User_profile::class);
   }
-  public function talentProfile()
+  public function talentprofile()
   {
     return $this->hasOne(Talent_Profile::class);
+  }
+  public function companyprofile()
+  {
+    return $this->hasOne(Company_profile::class);
+  }
+  public function individual()
+  {
+    return $this->hasOne(Individual::class);
+  }
+  public function projects()
+  {
+    return $this->hasMany(Project::class);
   }
 }

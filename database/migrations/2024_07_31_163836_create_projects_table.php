@@ -16,7 +16,7 @@ return new class extends Migration
       $table->foreignId('poster_id')->constrained('users')->cascadeOnDelete();
       $table->string('title');
       $table->text('description');
-      $table->json('required_skills')->nullable();
+      $table->string('required_skills')->nullable();
       $table->decimal('budget', 15, 2)->nullable();
       $table->integer('duration')->nullable(); // Project duration in days
       $table->timestamps();

@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Company_profileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\IndividualController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Talent_ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,18 +14,47 @@ Route::get('/', function () {
 
 Route::get("/dashboard", [DashboardController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get("/dashboard/talent{user_profile}", [DashboardController::class, "talent"])->middleware(['auth', 'verified'])->name('talent.dashboard');
 
-Route::get("/dashboard/company{user_profile}", [DashboardController::class, "company"])->middleware(['auth', 'verified'])->name('company.dashboard');
+// individual
 
-Route::get("/dashboard/individual{user_profile}", [DashboardController::class, "individual"])->middleware(['auth', 'verified'])->name('individual.dashboard');
+Route::get("/individual/{user}/dashboard", [IndividualController::class, "index"])->middleware(['auth', 'verified', "can:individual"])->name('individual.dashboard');
 
-Route::post("/", [UserController::class, "store"])->middleware(['guest'])->name('user.store');
+Route::get("/find-talents", [IndividualController::class, "find_talents"])->middleware(['auth', 'verified', "can:individual_company"])->name('find_talents');
+
+Route::get("/talent-search", [IndividualController::class, "talent_search"])->middleware(['auth', 'verified', "can:individual_company"])->name('talent_search');
+
+// Route::post("/", [UserController::class, "store"])->middleware(['guest'])->name('user.store');
 
 Route::middleware('auth')->group(function () {
-  Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-  Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-  Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+  Route::get('/profile/{profile}', [UserController::class, 'edit'])->name('profile.edit');
+
+  Route::post('/profile/{profile}', [UserController::class, 'profile_img'])->name('profile.addimg');
+
+  Route::patch('/profile/{profile}', [UserController::class, 'update'])->name('user.update');
+
+  Route::delete('/profile', [UserController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+// talents
+require base_path('routes/talent.php');
+
+// company
+require base_path('routes/company.php');
+
+// jobs
+require base_path('routes/job.php');
+
+// jobs
+require base_path('routes/project.php');
+
+
+
+
+
+
+
+
+
 
 require __DIR__ . '/auth.php';
