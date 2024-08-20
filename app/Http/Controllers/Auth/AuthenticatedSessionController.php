@@ -28,17 +28,18 @@ class AuthenticatedSessionController extends Controller
     $request->authenticate();
 
     $request->session()->regenerate();
-    // dd(auth()->user()->user_type);
+    // dd(Auth::user()->user_type);
 
 
-    if (auth()->user()->user_type === "company") {
-      return redirect(route('company.dashboard', auth()->user()->id));
-    } elseif (auth()->user()->user_type === "individual") {
-      return redirect(route('individual.dashboard', auth()->user()->id));
-    } elseif (auth()->user()->user_type === "talent") {
-      return redirect(route('talent.dashboard', auth()->user()->id));
+    if (Auth::user()->user_type === "company") {
+      return redirect(route('company.dashboard', Auth::user()->id));
+    } elseif (Auth::user()->user_type === "individual") {
+      return redirect(route('individual.dashboard', Auth::user()->id));
+    } elseif (Auth::user()->user_type === "talent") {
+      return redirect(route('talent.dashboard', Auth::user()->id));
+    } elseif (Auth::user()->user_type === "admin") {
+      return redirect(route('admin.dashboard', Auth::user()->id));
     }
-
   }
 
   /**

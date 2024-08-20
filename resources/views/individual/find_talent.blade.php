@@ -51,8 +51,8 @@
             <div>
               <label for="location"
                 class="block text-sm font-medium text-gray-700">Location
-                </label>
-                
+              </label>
+
               <select name="location" id="location"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option value="">Select Location
@@ -64,8 +64,8 @@
                   request('location')=='europe' ? 'selected'
                   : '' }}>Europe</option>
                 <option value="us" {{
-                  request('location')=='us'
-                  ? 'selected' : '' }}>Us</option>
+                  request('location')=='us' ? 'selected'
+                  : '' }}>Us</option>
               </select>
             </div>
 
@@ -74,7 +74,7 @@
             <div>
               <label for="experience"
                 class="block text-sm font-medium text-gray-700">Experience
-                </label>
+              </label>
 
               <select name="experience" id="experience"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -84,8 +84,8 @@
                   request('experience')=='1 year'
                   ? 'selected' : '' }}>1 year</option>
                 <option value="2" {{
-                  request('experience')=='2 years' ? 'selected'
-                  : '' }}>2 years</option>
+                  request('experience')=='2 years'
+                  ? 'selected' : '' }}>2 years</option>
                 <option value="3" {{
                   request('experience')=='3 years'
                   ? 'selected' : '' }}>3 years</option>
@@ -113,17 +113,29 @@
           <div
             class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach($talents as $talent)
-            <div class="p-4 border rounded-lg bg-gray-50">
-              <h3 class="text-lg font-semibold">{{
-                $talent->userprofile->first_name }}
-                {{$talent->userprofile->last_name
-                }}</h3>
+            <a href="{{Route("talent.details",$talent->id
+              )}}" class="p-4 border rounded-lg bg-gray-50">
+              <div class="flex items-center mb-4">
+                <div class="flex-shrink-0 h-16 w-16">
+                  <img style="object-fit: cover"
+                    class="h-16 w-16 rounded-full"
+                    src="{{ $talent->userprofile->getImgUrl() }}"
+                    alt="Profile Photo">
+                </div>
+                <div class="ml-4">
+                  <h3 class="text-lg font-semibold">
+                    {{ $talent->userprofile->first_name }}
+                    {{ $talent->userprofile->last_name }}
+                  </h3>
+                  <p class="text-gray-700">{{
+                    $talent->userprofile->location }}</p>
+                </div>
+              </div>
               <p class="text-gray-700">
-                {{$talent->userprofile->location
-                }}</p>
-              <p class="text-gray-700"> {{$talent->education}}</p>
+                {{$talent->education}}</p>
               <p class="text-gray-700">
-                {{$talent->experience }} year/years experience</p>
+                {{$talent->experience }} year/years
+                experience</p>
               <div class="mt-2 flex flex-wrap">
                 {{-- @foreach($talent->skills as $skill)
                 --}}
@@ -132,7 +144,7 @@
                   {{$talent->skills}}</span>
                 {{-- @endforeach --}}
               </div>
-            </div>
+            </a>
             @endforeach
           </div>
 

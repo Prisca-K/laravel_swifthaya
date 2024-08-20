@@ -25,6 +25,10 @@
             style="border: 2px solid gray; padding:5px;
             height:3rem; border-radius:5px;">Post Project
           </a>
+          <a href="{{ Route("messages.index") }}"
+          class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Messages
+          </a>
           @if ($jobs)
           <a class="flex justify-center items-center"
             href="{{Route("jobs",$user->id)}}"
@@ -32,6 +36,7 @@
             height:3rem; border-radius:5px; margin-right:
             1rem">My Jobs
           </a>
+          
           @endif
         </div>
         @else
@@ -62,6 +67,7 @@
 
   </div>
   @if ($jobs)
+
   <h2
   style="font-size:1.5rem; text-align:center;margin-bottom:1rem">
   My Jobs
@@ -85,7 +91,7 @@
           href="{{Route("job.show", $job->id)}}"
           style="border: 2px solid gray; padding:5px;
           height:3rem; border-radius:5px;">View Job
-        </a>
+        </a>    
     </div>
     @empty
     <p>No Jobs Posted Yet</p>

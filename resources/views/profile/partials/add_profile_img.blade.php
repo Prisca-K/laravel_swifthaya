@@ -7,8 +7,7 @@
 
     <p
       class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-      {{ __('Photo must be less than 2048MB. jpeg, webp ,
-      svg, png and gif only') }}
+      {{ __('Photo must be less than 2048MB. jpg, jpeg, png, gif and svg. only') }}
     </p>
   </header>
   <style>
@@ -66,13 +65,12 @@
     }
   </style>
   <form class="addimg" enctype="multipart/form-data"
-    method="post" action="{{Route("profile.addimg",
-    $profile->id)}}">
+    method="post" action="{{Route("profile.addimg",Auth::user()->id)}}">
     @csrf
     <div class="img-cont">
       <i class="ph ph-user-circle"></i>
       <div class="img">
-        <img src="{{$profile->getImgUrl()}}"
+        <img src="{{$user->userprofile->getImgUrl()}}"
           alt="profile image">
       </div>
     </div>
@@ -81,9 +79,16 @@
     @error('profile_picture')
     <p>{{$message}}</p>
     @enderror
+    @if ($user->userprofile->getImgUrl())
+    <x-primary-button>
+      Change profile image
+    </x-primary-button>
+    @else
     <x-primary-button>
       Add profile image
     </x-primary-button>
+    @endif
+    
   </form>
 
 </section>

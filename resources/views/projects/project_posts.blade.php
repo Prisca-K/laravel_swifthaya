@@ -2,7 +2,7 @@
   <x-slot name="header">
     <h2
       class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-      {{ __('Company Dashboard') }}
+      {{ __('MY Project Posts') }}
     </h2>
   </x-slot>
 {{-- 
@@ -36,7 +36,7 @@
     </div>
   </div> --}}
   <h2
-    style="font-size:1.5rem; text-align:center;margin-top:1rem">
+    style="font-size:1.5rem; text-align:center;margin-bottom:2rem">
     My Projects
   </h2>
   <div class="py-12">
@@ -57,7 +57,6 @@
           <p>Duration: {{$project->duration}}</p>
           <p>Deadline: {{$project->deadline_date}}</p>
         </div>
-
 
         <a class=" w-3/4 flex justify-center items-center"
         href="{{Route("project.show", $project->id)}}"

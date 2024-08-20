@@ -26,6 +26,12 @@
 
 
         <div class="w-full buttons flex gap-4">
+          <a class="flex justify-center items-center"
+          href="{{Route("job.applicants", $job->id)}}"
+          style="border: 2px solid gray; padding:5px;
+          height:3rem; border-radius:5px; margin-right:
+          1rem">Application history
+          </a>
           <a class=" w-3/4 flex justify-center items-center"
             href="{{Route("job.edit",[$job->id])}}"
             style="border: 2px solid gray; padding:5px;

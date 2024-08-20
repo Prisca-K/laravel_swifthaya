@@ -7,6 +7,7 @@ use App\Models\Talent_profile;
 use App\Models\User;
 use App\Models\User_profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class IndividualController extends Controller
@@ -32,10 +33,9 @@ class IndividualController extends Controller
   public function find_talents(User_profile $user_profile)
   {
     $talents = Talent_profile::with('userprofile')->get();
-    
-    return view($this->getViewPath('find_talent', auth()->user()->user_type), compact("user_profile", "talents"));
-  }
 
+    return view($this->getViewPath('find_talent', Auth::user()->user_type), compact("user_profile", "talents"));
+  }
 
 
   public function talent_search(Request $request)
@@ -52,8 +52,6 @@ class IndividualController extends Controller
     }
 
 
-
-
     // Filtering by skills
     if ($request->filled('skills')) {
       $skills = $request->input('skills');
@@ -61,15 +59,6 @@ class IndividualController extends Controller
         $q->where('skills', 'like', '%' . $skills . '%');
       });
     }
-
-    // // Filtering by education
-    // if ($request->filled('education')) {
-    //   $skills = $request->input('skills');
-    //   $query->where(function ($q) use ($skills) {
-    //     $q->where('skills', 'like', '%' . $skills . '%');
-    //   });
-    // }
-
 
     // Filtering by location (assuming location is in user_profile table)
     if ($request->filled('location')) {
@@ -87,8 +76,8 @@ class IndividualController extends Controller
       });
     }
 
-    $talents = $query->paginate(4);
-    
-    return view('individual.find_talent', compact('talents'));
+    $talents = $query->paginate(10);
+
+    return view($this->getViewPath('find_talent', Auth::user()->user_type), compact("talents"));
   }
 }

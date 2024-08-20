@@ -27,13 +27,14 @@
           <p>Job Type: {{$job->job_type}}</p>
           <p>Deadline: {{$job->deadline_date}}</p>
         </div>
-
+        <div class="w-full buttons flex gap-4">
         <a class=" w-3/4 flex justify-center items-center"
           href="{{Route("job.show", $job->id)}}"
           style="border: 2px solid gray; padding:5px;
           height:3rem; border-radius:5px;">View Job
         </a>
-
+        
+        </div>
       </div>
 
       @empty

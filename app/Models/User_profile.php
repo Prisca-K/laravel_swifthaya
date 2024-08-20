@@ -35,6 +35,10 @@ class User_profile extends Model
   {
     return $this->hasOne(Individual::class);
   }
+  public function applications()
+  {
+    return $this->hasMany(Application::class);
+  }
  
   public function getImgUrl()
   {

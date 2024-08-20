@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\IndividualController;
+use App\Http\Controllers\SwifthayajobController;
 use App\Http\Controllers\Talent_ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,13 +20,12 @@ Route::patch("/talents/{talent_profile}/edit", [Talent_ProfileController::class,
 
 Route::delete("/talents/{talent_profile}", [Talent_ProfileController::class, "destroy"])->middleware(['auth', 'verified', "can:talent"])->name('talent.delete');
 
-// search routes
-// job
-Route::get("/find-jobs", [Talent_ProfileController::class, "find_jobs"])->middleware(['auth', 'verified', "can:talent"])->name('find_jobs');
+// candidate details
+Route::get("/talent{talent_profile}/details", [Talent_ProfileController::class, "talent_details"])->middleware(['auth', 'verified', "can:individual_company"])->name('talent.details');
 
-Route::get("/job_search", [Talent_ProfileController::class, "job_search"])->middleware(['auth', 'verified', "can:talent"])->name('job_search');
+// offer candidate a job
+Route::get("/talent{talent_profile}/offer-job", [SwifthayajobController::class, "offer_job"])->middleware(['auth', 'verified', "can:individual_company"])->name('job.offer_job');
 
-// project
-Route::get("/find-projects", [Talent_ProfileController::class, "find_projects"])->middleware(['auth', 'verified', "can:talent"])->name('find_projects');
+Route::get("/find-talents", [IndividualController::class, "find_talents"])->middleware(['auth', 'verified', "can:individual_company"])->name('find_talents');
 
-Route::get("/project_search", [Talent_ProfileController::class, "project_search"])->middleware(['auth', 'verified', "can:talent"])->name('project_search');
+Route::get("/talent-search", [IndividualController::class, "talent_search"])->middleware(['auth', 'verified', "can:individual_company"])->name('talent_search');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Models\User_profile;
 use Illuminate\Auth\Events\Registered;
@@ -28,18 +29,10 @@ class RegisteredUserController extends Controller
    *
    * @throws \Illuminate\Validation\ValidationException
    */
-  public function store(Request $request): RedirectResponse
+  public function store(StoreUserRequest $request): RedirectResponse
   {
 
-
-    $validated = $request->validate([
-      'first_name' => ['required', 'string', 'min:3', 'max:20'],
-      'last_name' => ['required', 'string', 'min:3', 'max:20'],
-      'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-      'password' => ['required', 'confirmed', Rules\Password::defaults()],
-      'user_type' => ['required', 'in:talent,company,individual'],
-
-    ]);
+    $validated = $request->validated();
 
     $user = User::create([
       'email' => $validated["email"],
@@ -66,6 +59,8 @@ class RegisteredUserController extends Controller
       return redirect(route('individual.dashboard', $user->id));
     } elseif ($user->user_type === "talent") {
       return redirect(route('talent.dashboard', $user->id));
+    } elseif ($user->user_type === "admin") {
+      return redirect(route('admin.dashboard', $user->id));
     } else return redirect(route('dashboard', $user->id));
   }
 }

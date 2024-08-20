@@ -19,6 +19,7 @@ return new class extends Migration
       $table->text('cover_letter')->nullable();
       $table->string('attachments')->nullable();
       $table->enum('status', ['Pending', 'Accepted', 'Rejected'])->default('Pending');
+      $table->timestamp("applied_at")->nullable();
       $table->timestamps();
     });
   }

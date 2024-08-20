@@ -11,13 +11,10 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('messages', function (Blueprint $table) {
+    Schema::create('conversations', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+      $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
       $table->foreignId('recipient_id')->constrained('users')->cascadeOnDelete();
-      $table->text('content');
-      $table->enum('status', ['sent', 'delivered', 'read'])->default('sent');
-      $table->timestamp('read_at')->nullable();
       $table->timestamps();
     });
   }
@@ -27,6 +24,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('messages');
+    Schema::dropIfExists('conversations');
   }
 };

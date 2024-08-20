@@ -131,9 +131,10 @@
         <label for="job_type">Job Type</label>
         <select class="form-control" id="job_type"
           name="job_type" required>
-          <option value="Full-time">Full-time</option>
-          <option value="Part-time">Part-time</option>
-          <option value="Contract">Contract</option>
+          <option selected value="">Select Job Type</option>
+          <option value="full-time">Full-time</option>
+          <option value="part-time">Part-time</option>
+          <option value="contract">Contract</option>
         </select>
         @error('job_type')
         <p>{{ $message }}</p>

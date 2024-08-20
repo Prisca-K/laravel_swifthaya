@@ -17,4 +17,9 @@ class Individual extends Model
     {
       return $this->hasMany(Project::class);
     }
+    public function application()
+    {
+      return $this->hasMany(Application::class);
+    }
+    
 }

@@ -27,6 +27,10 @@ class Project extends Model
 
   public function user()
   {
-    return $this->belongsTo(User::class);
+    return $this->belongsTo(User::class, "poster_id");
+  }
+  public function application()
+  {
+    return $this->hasMany(Application::class, "project_id");
   }
 }

@@ -124,7 +124,8 @@
           <div
             class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach($jobs as $job)
-            <div class="p-4 border rounded-lg bg-gray-50">
+            <a href="{{Route("job.details",$job->id)}}"
+              class="p-4 border rounded-lg bg-gray-50">
               <h3 class="text-lg font-semibold">
                 {{$job->title}}</h3>
               <p class="text-gray-700">
@@ -144,7 +145,7 @@
                   {{$job->required_skills}}</span>
                 {{-- @endforeach --}}
               </div>
-            </div>
+            </a>
             @endforeach
           </div>
 

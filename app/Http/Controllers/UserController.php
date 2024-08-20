@@ -15,27 +15,29 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-  public function edit(User_profile $profile)
+  public function edit(User $user)
   {
-    Gate::authorize("update", $profile);
+    // dd($profile->id);
+    $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
+    Gate::authorize("update", $user_profile);
     return view('profile.edit', [
-      'user' => auth()->user(),
-      "profile" => $profile
+      'user' => $user,
+      // "profile" => $user
     ]);
   }
 
   /**
    * Update the specified resource in storage.
    */
-  public function update(StoreUserRequest $request, User_profile $profile)
+  public function update(StoreUserRequest $request, User $user)
   {
+    $profile = User_profile::where("id", $user->userprofile->id)->first();
     Gate::authorize("update", $profile);
-    $user = User::where("id", $profile->user_id)->first();
     $validated = $request->validated();
 
     $user->update([
       'email' => $validated["email"],
-      'password' => $user->password
+      'password' => $user->passwor
     ]);
 
 
@@ -53,14 +55,16 @@ class UserController extends Controller
 
     return redirect()->route('profile.edit', $profile->id)->with('status', 'profile-updated');
   }
-  public function profile_img(Request $request, User_profile $profile)
+  public function profile_img(Request $request, User $user)
   {
+    // dd($user->id);
+    $profile = User_profile::where("id", $user->userprofile->id)->first();
     Gate::authorize("update", $profile);
     $validated = $request->validate(['profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048']);
     // updating user profile
     // $profile->update([
-      //   'user_id' => auth()->id(),
-      //   'first_name' => ucfirst($validated["first_name"]),
+    //   'user_id' => auth()->id(),
+    //   'first_name' => ucfirst($validated["first_name"]),
     //   'last_name' => ucfirst($validated["last_name"]),
     //   'profile_picture' => $validated["profile_picture"],
     // ]);
@@ -76,9 +80,9 @@ class UserController extends Controller
 
       $profile->profile_picture = $validated;
       $profile->update(["profile_picture" => $validated]);
-    return redirect()->route('profile.edit', $profile->id)->with('status', 'profile-updated');
+      return redirect()->route('profile.edit', $user->id)->with('status', 'profile-updated');
+    }
   }
-}
   /**
    * Remove the specified resource from storage.
    */

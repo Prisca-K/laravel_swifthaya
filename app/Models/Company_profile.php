@@ -19,7 +19,7 @@ class Company_profile extends Model
 
   public function userprofile()
   {
-    return $this->belongsTo(User_profile::class);
+    return $this->belongsTo(User_profile::class, 'user_profile_id', 'id');
   }
   public function user()
   {
@@ -27,6 +27,6 @@ class Company_profile extends Model
   }
   public function swifthayajob()
   {
-    return $this->hasMany(Swifthayajob::class);
+    return $this->hasMany(SwifthayaJob::class, 'swifthayajob_id');
   }
 }

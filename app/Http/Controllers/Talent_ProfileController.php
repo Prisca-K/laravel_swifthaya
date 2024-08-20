@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTalent_profileRequest;
 use App\Http\Requests\UpdateTalent_profileRequest;
+use App\Models\Conversation;
 use App\Models\Project;
 use App\Models\Swifthayajob;
 use App\Models\Talent_profile;
@@ -11,6 +12,7 @@ use App\Models\User;
 use App\Models\User_profile;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 use function PHPUnit\Framework\isNull;
@@ -20,12 +22,17 @@ class Talent_ProfileController extends Controller
 
   public function index(User $user)
   {
-    if ($user->id !== auth()->id()) {
+    if ($user->id !== Auth::user()->id) {
       abort("403");
     }
-
+    // $conversation = Conversation::where("recipient_id", Auth::user()->id)->first();
+    // $recipient_id= false;
+    // if ($conversation) {
+    //   $recipient_id = $conversation->user_id;
+    // }
     $user_profile = User_profile::where("user_id", $user->id)->first();
     $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
+    
     // boolval($user_profile->talentprofile)
     return view("talent.dashboard", compact("user_profile", "talent_profile"));
   }
@@ -42,7 +49,7 @@ class Talent_ProfileController extends Controller
 
   public function store(StoreTalent_profileRequest $request, User_profile $user_profile)
   {
-    if ($user_profile->user_id !== auth()->id()) {
+    if ($user_profile->user_id !== Auth::user()->id) {
       abort("403");
     }
     $validated = $request->validated();
@@ -78,11 +85,9 @@ class Talent_ProfileController extends Controller
 
   public function edit(Talent_profile $talent_profile)
   {
+    Gate::authorize("update", $talent_profile);
     $user_profile = User_profile::where("id", $talent_profile->user_profile_id)->first();
     // dd($user_profile->id);
-
-    Gate::authorize("update", $talent_profile);
-
     return view("talent.edit_profile", compact("talent_profile", "user_profile"));
   }
 
@@ -113,8 +118,15 @@ class Talent_ProfileController extends Controller
   {
     Gate::authorize("delete", $talent_profile);
     $talent_profile->delete();
-    return redirect()->route("talent.dashboard", auth()->id());
+    return redirect()->route("talent.dashboard", Auth::user()->id);
   }
+
+
+  public function talent_details(Talent_profile $talent_profile)
+  {
+    return view("talent.talent_details", compact("talent_profile"));
+  }
+
 
   public function find_jobs()
   {
@@ -201,7 +213,6 @@ class Talent_ProfileController extends Controller
       });
     }
 
-
     // Filtering by title
     if ($request->filled('title')) {
       $title = $request->input('title');
@@ -216,14 +227,6 @@ class Talent_ProfileController extends Controller
         $q->where('required_skills', 'like', '%' . $required_skills . '%');
       });
     }
-
-    // // Filtering by education
-    // if ($request->filled('education')) {
-    //   $skills = $request->input('skills');
-    //   $query->where(function ($q) use ($skills) {
-    //     $q->where('skills', 'like', '%' . $skills . '%');
-    //   });
-    // }
 
 
     // Filtering by duration

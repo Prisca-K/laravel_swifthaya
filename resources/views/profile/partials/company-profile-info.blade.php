@@ -1,5 +1,5 @@
-@if ($profile->companyprofile)
-@can('company', $profile->companyprofile->id)
+@if ($user->userprofile->companyprofile)
+@can('company', $user->userprofile->companyprofile->id)
 <section>
   {{-- form --}}
   <header class="mb-4">
@@ -14,7 +14,7 @@
     </p>
   </header>
   <div class="form-container">
-    <form action="{{ route('company.update',$profile->companyprofile->id)}}"
+    <form action="{{ route('company.update',$user->userprofile->companyprofile->id)}}"
       method="POST">
       @csrf
       @method("PATCH")
@@ -22,7 +22,7 @@
       <div class="form-group mb-4">
         <label class="block" for="company_name">Company Name</label>
         <input type="text" class="form-control"
-          id="company_name" value="{{$profile->companyprofile->company_name}}" name="company_name" required
+          id="company_name" value="{{$user->userprofile->companyprofile->company_name}}" name="company_name" required
           maxlength="255">
       </div>
 
@@ -30,7 +30,7 @@
       <div class="form-group mb-4">
         <label class="block" for="industry">Industry</label>
         <input type="text" class="form-control"
-          id="industry" name="industry" value="{{$profile->companyprofile->industry}}" required
+          id="industry" name="industry" value="{{$user->userprofile->companyprofile->industry}}" required
           maxlength="255">
       </div>
 
@@ -38,7 +38,7 @@
       <div class="form-group mb-4">
         <label class="block" for="company_size">Company Size</label>
         <input type="number" class="form-control"
-          id="company_size" name="company_size" value="{{$profile->companyprofile->company_size}}" required
+          id="company_size" name="company_size" value="{{$user->userprofile->companyprofile->company_size}}" required
           min="1">
       </div>
 
@@ -46,7 +46,7 @@
       <div class="form-group mb-4">
         <label class="block" for="founded_year">Founded Year</label>
         <input type="number" class="form-control"
-          id="founded_year" name="founded_year" value="{{$profile->companyprofile->founded_year}}" required
+          id="founded_year" name="founded_year" value="{{$user->userprofile->companyprofile->founded_year}}" required
           min="1800" max="{{ date('Y') }}">
       </div>
       <x-primary-button>{{ __('Save') }}</x-primary-button>
