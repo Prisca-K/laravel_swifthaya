@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTalent_profileRequest;
 use App\Http\Requests\UpdateTalent_profileRequest;
+use App\Models\Conversation;
 use App\Models\Project;
 use App\Models\Swifthayajob;
 use App\Models\Talent_profile;
@@ -11,6 +12,7 @@ use App\Models\User;
 use App\Models\User_profile;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 use function PHPUnit\Framework\isNull;
@@ -20,12 +22,17 @@ class Talent_ProfileController extends Controller
 
   public function index(User $user)
   {
-    if ($user->id !== auth()->id()) {
+    if ($user->id !== Auth::user()->id) {
       abort("403");
     }
-
+    // $conversation = Conversation::where("recipient_id", Auth::user()->id)->first();
+    // $recipient_id= false;
+    // if ($conversation) {
+    //   $recipient_id = $conversation->user_id;
+    // }
     $user_profile = User_profile::where("user_id", $user->id)->first();
     $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
+
     // boolval($user_profile->talentprofile)
     return view("talent.dashboard", compact("user_profile", "talent_profile"));
   }
@@ -42,15 +49,12 @@ class Talent_ProfileController extends Controller
 
   public function store(StoreTalent_profileRequest $request, User_profile $user_profile)
   {
-    if ($user_profile->user_id !== auth()->id()) {
+    if ($user_profile->user_id !== Auth::user()->id) {
       abort("403");
     }
     $validated = $request->validated();
 
     $has_talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
-    if ($has_talent_profile) {
-      Gate::authorize("update", $has_talent_profile);
-    }
     if (!$has_talent_profile) {
 
       $talent_profile = Talent_profile::create(
@@ -65,24 +69,25 @@ class Talent_ProfileController extends Controller
       return redirect()->route('talent.show', [$user_profile->id])->with('success', 'Talent profile created successfully.');
     }
 
+    if ($has_talent_profile) {
+      Gate::authorize("update", $has_talent_profile);
+    }
+
     $talent_profile = $has_talent_profile;
-    return view("talent.view_profile", compact("user_profile", "talent_profile"));
+    return redirect()->route("talent.show", $user_profile->id);
   }
 
-  public function show(User_profile $user_profile)
+  public function show(Talent_profile $talent_profile)
   {
-    $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
     Gate::authorize("view", $talent_profile);
-    return view("talent.view_profile", compact("user_profile", "talent_profile"));
+    return view("talent.view_profile", compact("talent_profile"));
   }
 
   public function edit(Talent_profile $talent_profile)
   {
+    Gate::authorize("update", $talent_profile);
     $user_profile = User_profile::where("id", $talent_profile->user_profile_id)->first();
     // dd($user_profile->id);
-
-    Gate::authorize("update", $talent_profile);
-
     return view("talent.edit_profile", compact("talent_profile", "user_profile"));
   }
 
@@ -103,7 +108,8 @@ class Talent_ProfileController extends Controller
       ]
     );
 
-    return redirect()->route('talent.show', [$user_profile->id])->with('success', 'Talent profile created successfully.');
+    
+    return redirect()->route('talent.show', [$talent_profile->id])->with('success', 'Talent profile created successfully.');
   }
 
   /**
@@ -113,18 +119,25 @@ class Talent_ProfileController extends Controller
   {
     Gate::authorize("delete", $talent_profile);
     $talent_profile->delete();
-    return redirect()->route("talent.dashboard", auth()->id());
+    return redirect()->route("talent.dashboard", Auth::user()->id);
   }
 
-  public function find_jobs()
+
+  public function talent_details(Talent_profile $talent_profile)
   {
-    $jobs = Swifthayajob::with('companyprofile')->get();
-    return view("talent.find_jobs", compact("jobs"));
+    return view("talent.talent_details", compact("talent_profile"));
   }
+
+
+  // public function find_jobs()
+  // {
+  //   $jobs = Swifthayajob::with('user')->latest()->paginate(4);
+  //   return view("talent.find_jobs", compact("jobs"));
+  // }
 
   public function job_search(Request $request)
   {
-    $query = Swifthayajob::with("companyprofile");
+    $query = Swifthayajob::with("user");
 
 
     if (!empty($request->keyword)) {
@@ -152,13 +165,6 @@ class Talent_ProfileController extends Controller
       });
     }
 
-    // // Filtering by education
-    // if ($request->filled('education')) {
-    //   $skills = $request->input('skills');
-    //   $query->where(function ($q) use ($skills) {
-    //     $q->where('skills', 'like', '%' . $skills . '%');
-    //   });
-    // }
 
 
     // Filtering by location (location is in user_profile table)
@@ -177,15 +183,15 @@ class Talent_ProfileController extends Controller
       });
     }
 
-    $jobs = $query->paginate(10);
+    $jobs = $query->latest()->paginate(4);
 
     return view('talent.find_jobs', compact('jobs'));
   }
-  public function find_projects()
-  {
-    $projects = Project::with('user')->get();
-    return view("talent.find_projects", compact("projects"));
-  }
+  // public function find_projects()
+  // {
+  //   $projects = Project::with('user')->latest()->paginate(4);
+  //   return view("talent.find_projects", compact("projects"));
+  // }
 
   public function project_search(Request $request)
   {
@@ -201,7 +207,6 @@ class Talent_ProfileController extends Controller
       });
     }
 
-
     // Filtering by title
     if ($request->filled('title')) {
       $title = $request->input('title');
@@ -216,14 +221,6 @@ class Talent_ProfileController extends Controller
         $q->where('required_skills', 'like', '%' . $required_skills . '%');
       });
     }
-
-    // // Filtering by education
-    // if ($request->filled('education')) {
-    //   $skills = $request->input('skills');
-    //   $query->where(function ($q) use ($skills) {
-    //     $q->where('skills', 'like', '%' . $skills . '%');
-    //   });
-    // }
 
 
     // Filtering by duration
@@ -242,7 +239,7 @@ class Talent_ProfileController extends Controller
       });
     }
 
-    $projects = $query->paginate(10);
+    $projects = $query->latest()->paginate(4);
 
     return view('talent.find_projects', compact('projects'));
   }

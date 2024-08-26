@@ -1,67 +1,61 @@
 <x-app-layout>
   <x-slot name="header">
-    <h2
-      class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-      {{ __('Company Dashboard') }}
-    </h2>
+    <div class="flex justify-between items-center">
+      <h2
+        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        {{ __('Company Dashboard') }}
+      </h2>
+      <a href="{{Route("profile.edit", Auth::user()->id)}}">
+        <img class="w-12 h-12 object-cover rounded-full" src="{{Auth::user()->userprofile->getImgUrl()}}" alt="">
+      </a>
+    </div>
   </x-slot>
 
   <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div
-        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg flex justify-between items-center">
+        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg flex items-center justify-evenly">
         <div class="p-6 text-gray-900 dark:text-gray-100">
           {{ __("You're logged in!") }}
         </div>
         @if ($user_profile->companyprofile)
-        <div class="buttons flex gap-3">
-          <a class="flex justify-center items-center"
+          <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             href="{{Route("job.create",$user->id)}}"
-            style="border: 2px solid gray; padding:5px;
-            height:3rem; border-radius:5px;">Post Job
+            >Post Job
           </a>
-          <a class="flex justify-center items-center"
+          <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             href="{{Route("project.create",$user->id)}}"
-            style="border: 2px solid gray; padding:5px;
-            height:3rem; border-radius:5px;">Post Project
+            >Post Project
+          </a>
+          <a href="{{ Route("conversations.index") }}"
+          class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Messages
           </a>
           @if ($jobs)
-          <a class="flex justify-center items-center"
-            href="{{Route("jobs",$user->id)}}"
-            style="border: 2px solid gray; padding:5px;
-            height:3rem; border-radius:5px; margin-right:
-            1rem">My Jobs
+          <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            href="{{Route("jobs",$user->id)}}">
+          My Jobs
           </a>
+          
           @endif
-        </div>
         @else
-        <a class="flex justify-center items-center"
+        <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           href="{{Route("company.create",
-          $user_profile->id)}}"
-          style="border: 2px solid gray; padding:5px;
-          height:3rem; border-radius:5px; margin-right:
-          2rem">Create
-          Profile
+          $user_profile->id)}}">
+        Create Profile
         </a>
         @endif
-        <a class="flex justify-center items-center"
-          href="{{Route("profile.edit",
-          $user->id)}}"
-          style="border: 2px solid gray; padding:5px;
-          height:3rem; border-radius:5px; margin-right:
-          2rem">Profile
-        </a>
-        <a class="flex justify-center items-center" 
-        href="{{Route("find_talents")}}"
-        style="border: 2px solid gray; padding:5px;
-        height:3rem; border-radius:5px; margin-right:
-        2rem">Find Talents
+
+        <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" 
+        href="{{Route("talent_search")}}">
+        Find Talents
         </a>
       </div>
     </div>
 
   </div>
   @if ($jobs)
+
   <h2
   style="font-size:1.5rem; text-align:center;margin-bottom:1rem">
   My Jobs
@@ -85,7 +79,7 @@
           href="{{Route("job.show", $job->id)}}"
           style="border: 2px solid gray; padding:5px;
           height:3rem; border-radius:5px;">View Job
-        </a>
+        </a>    
     </div>
     @empty
     <p>No Jobs Posted Yet</p>

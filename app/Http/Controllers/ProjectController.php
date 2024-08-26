@@ -28,12 +28,12 @@ class ProjectController extends Controller
     foreach ($projects as $project) {
       Gate::authorize("view", $project);
     }
-    return view($this->getViewPath('projects.project_posts', $user->user_type), compact("user", "projects"));
+    return view('projects.project_posts', compact("user", "projects"));
   }
 
   public function create(User $user)
   {
-    return view($this->getViewPath('projects.create_project', $user->user_type), compact("user"));
+    return view('projects.create_project', compact("user"));
   }
 
   public function store(StoreProjectRequest $request, User $user)
@@ -49,14 +49,14 @@ class ProjectController extends Controller
   {
     Gate::authorize("view", $project);
 
-    return view($this->getViewPath('projects.view_project', auth()->user()->user_type), compact("project"));
+    return view('projects.view_project', compact("project"));
   }
   public function edit(Project $project)
   {
 
     Gate::authorize("update", $project);
     $user = User::where("id", $project->poster_id)->first();
-    return view($this->getViewPath('projects.edit_project', $user->user_type), compact("user", "project"));
+    return view('projects.edit_project', compact("user", "project"));
   }
   public function update(UpdateProjectRequest $request, Project $project)
   {
@@ -75,5 +75,16 @@ class ProjectController extends Controller
     Gate::authorize("delete", $project);
     $project->delete();
     return redirect()->route("projects", auth()->id());
+  }
+  public function project_details(Project $project)
+  {
+    $user_profile = User_profile::where("user_id", $project->poster_id)->first();
+
+    // $company_profile = Company_profile::where("user_profile_id", $user_profile->id)->first();
+
+
+    // dd($company_profile);
+    // $job = $injob->with("companyprofile");
+    return view("projects.project_details", compact("project", "user_profile"));
   }
 }

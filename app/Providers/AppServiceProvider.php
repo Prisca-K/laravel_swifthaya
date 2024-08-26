@@ -22,21 +22,20 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
-    Paginator::useTailwind();
     Gate::define("admin", function (User $user) {
-      return $user->user_type === "individual";
+      return $user->user_type === "admin";
     });
     Gate::define("talent", function (User $user) {
-      return $user->user_type === "talent";
+      return $user->user_type === "admin" || $user->user_type === "talent";
     });
     Gate::define("company", function (User $user) {
-      return $user->user_type === "company";
+      return $user->user_type === "admin" || $user->user_type === "company";
     });
     Gate::define("individual", function (User $user) {
-      return $user->user_type === "individual";
+      return $user->user_type === "admin" || $user->user_type === "individual";
     });
     Gate::define("individual_company", function (User $user) {
-      return $user->user_type === "individual" || $user->user_type === "company";
+      return $user->user_type === "admin" || $user->user_type === "individual" || $user->user_type === "company";
     });
   }
 }

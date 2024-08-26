@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCompany_profileRequest;
 use App\Http\Requests\UpdateCompany_profileRequest;
 use App\Models\Company_profile;
+use App\Models\Conversation;
 use App\Models\Project;
 use App\Models\Swifthayajob;
 use App\Models\User;
 use App\Models\User_profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class Company_profileController extends Controller
@@ -19,7 +21,7 @@ class Company_profileController extends Controller
    */
   public function index(User $user)
   {
-    if ($user->id !== auth()->id()) {
+    if ($user->user_type !== "admin" && $user->id !== Auth::user()->id) {
       abort("403");
     }
     $user_profile = User_profile::where("user_id", $user->id)->first();
@@ -27,6 +29,10 @@ class Company_profileController extends Controller
     $jobs = Swifthayajob::where("company_id", $user->id)->get();
     $projects = Project::where("poster_id", $user->id)->get();
     // dd($jobs);
+
+    $conversation = Conversation::where("user_id", Auth::user()->id)->first();
+    // dd($conversation);
+    // $recipient_id = $conversation->recipient_id;
 
     return view("company.dashboard", compact("user_profile", "jobs", "user", "projects"));
   }
@@ -108,6 +114,6 @@ class Company_profileController extends Controller
   {
     Gate::authorize("delete", $company_profile);
     $company_profile->delete();
-    return redirect()->route("company.dashboard", auth()->id());
+    return redirect()->route("company.dashboard", Auth::user()->id);
   }
 }

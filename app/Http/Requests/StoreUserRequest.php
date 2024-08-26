@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use Illuminate\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
@@ -26,11 +27,8 @@ class StoreUserRequest extends FormRequest
       'first_name' => ['required', 'string', 'min:3', 'max:20'],
       'last_name' => ['required', 'string', 'min:3', 'max:20'],
       'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-      'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
-      'bio' => 'nullable|string',
-      'location' => 'nullable|string|max:255',
-      'phone_number' => 'nullable|string|max:20',
-      'website' => 'nullable|url|max:255',
+      'password' => ['required', 'confirmed', Rules\Password::defaults()],
+      'user_type' => ['required', 'in:talent,company,individual'],
     ];
   }
 }

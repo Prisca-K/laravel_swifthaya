@@ -1,167 +1,133 @@
 <x-app-layout>
-  <x-slot name="header">
-    <div class="flex justify-between items-center justify-center">
-      <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        {{ __('Company Dashboard') }}
-      </h2>
-      <a class="flex items-center justify-center px-6"
-        href="{{Route("jobs", [$user->id])}}"
-        style="border: 2px solid gray;
-        height:3rem; border-radius:5px;">All Jobs
-      </a>
 
+  <div class="min-h-screen bg-gray-100 p-10">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-semibold">Add New Job</h1>
+      <a href="{{ route('company.dashboard', Auth::user()->id) }}"
+        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Back</a>
     </div>
-  </x-slot>
 
+    @if ($errors->any())
+    <div
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"
+      role="alert">
+      <strong class="font-bold">Whoops!</strong> There were
+      some problems with your input.<br><br>
+      <ul class="mt-3 list-disc list-inside">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+    @endif
 
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <form action="{{ route('job.store', Auth::user()->id) }}"
+        method="POST">
+        @csrf
+        <div class="mb-4">
+          <label for="title"
+            class="block text-sm font-medium text-gray-700">Title</label>
+          <input type="text" name="title" id="title"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            value="{{ old('title') }}">
+        </div>
+        {{-- company Id --}}
+        {{-- <div class="mb-4">
+          <label for="company_id"
+            class="block text-sm font-medium text-gray-700">Company</label>
+          <select name="company_id" id="company_id"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <!-- Assuming companies are passed to the view -->
+            @foreach($users as $user)
+            <option value="{{ $user->id }}">
+              {{ $user->userprofile->first_name . " " .
+              $user->userprofile->last_name }}
+            </option>
+            @endforeach
+          </select>
+        </div> --}}
 
-  <style>
-    h1 {
-      font-size: 1.1rem;
-    }
+        {{-- salary range --}}
+        <div class="mb-4">
+          <label for="salary_range"
+            class="block text-sm font-medium text-gray-700">Salary
+            Range</label>
+          <select name="salary_range" id="salary_range"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <!-- Assuming companies are passed to the view -->
+            <option value="10-20">
+              $10-20
+            </option>
+            <option value="20-30">
+              $20-30
+            </option>
+            <option value="30-40">
+              $30-40
+            </option>
+            <option value="40-50">
+              $40-50
+            </option>
+            <option value="50-above">
+              $50-above
+            </option>
+          </select>
+        </div>
 
-    .form-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      gap: 1rem;
-      margin-block: 5rem;
-    }
+        {{-- job type --}}
+        <div class="mb-4">
+          <label for="job_type"
+            class="block text-sm font-medium text-gray-700">Job
+            Type</label>
+          <select name="job_type" id="job_type"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <option value="full-time">
+              Full-time
+            </option>
+            <option value="part-time">
+              Part-time
+            </option>
+            <option value="contract">
+              Contract
+            </option>
+          </select>
+        </div>
 
-    .form-group {
-      display: flex;
-      justify-content: flex-end;
-    }
+        {{-- skills --}}
+        <div class="mb-4">
+          <label for="required_skills"
+            class="block text-sm font-medium text-gray-700">Required
+            Skills</label>
+          <input type="text" name="required_skills"
+            id="required_skills"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            value="{{ old('required_skills') }}">
+        </div>
 
-    label {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      width: 100px;
-    }
+        {{-- description --}}
+        <div class="mb-4">
+          <label for="description"
+            class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea name="description" id="description"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
+        </div>
+        {{-- location --}}
 
-    button {
-      padding: 0.5rem 2rem;
-      margin-block: 1rem;
-      border: 2px solid grey;
-      border-radius: 5px
-    }
+        <div class="mb-4">
+          <label for="location"
+            class="block text-sm font-medium text-gray-700">Location</label>
+          <input type="text" name="location" id="location"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            value="{{ old('location') }}">
+        </div>
 
-    textarea,
-    select,
-    input {
-      width: 300px;
-    }
-
-    form {
-      /* background-color: red; */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      border: 1px solid grey;
-      border-radius: 1rem;
-      padding: 2rem;
-    }
-  </style>
-  {{-- form --}}
-  <div class="form-container">
-    <h1>Post a Job</h1>
-    <form
-      action="{{ route('job.store',$user->id) }}"
-      method="POST">
-      @csrf
-
-      <!-- Title -->
-      <div class="form-group">
-        <label for="title">Job Title</label>
-        <input type="text" class="form-control" id="title"
-          name="title" required maxlength="255">
-        @error('title')
-        <p>{{ $message }}</p>
-        @enderror
-      </div>
-
-      <!-- Description -->
-      <div class="form-group">
-        <label for="description">Job Description</label>
-        <textarea class="form-control" id="description"
-          name="description" required></textarea>
-        @error('description')
-        <p>{{ $message }}</p>
-        @enderror
-      </div>
-
-      <!-- Required Skills -->
-      <div class="form-group">
-        <label for="required_skills">Required Skills</label>
-        <input type="text" class="form-control"
-          id="required_skills" name="required_skills">
-        @error('required_skills')
-        <p>{{ $message }}</p>
-        @enderror
-      </div>
-
-      <!-- Location -->
-      <div class="form-group">
-        <label for="location">Location</label>
-        <input type="text" class="form-control"
-          id="location" name="location" maxlength="255">
-        @error('location')
-        <p>{{ $message }}</p>
-        @enderror
-      </div>
-
-      <!-- Salary Range -->
-      <div class="form-group">
-        <label for="salary_range">Salary Range</label>
-        <input type="text" class="form-control"
-          id="salary_range" name="salary_range"
-          maxlength="255">
-        @error('salary_range')
-        <p>{{ $message }}</p>
-        @enderror
-      </div>
-
-      <!-- Job Type -->
-      <div class="form-group">
-        <label for="job_type">Job Type</label>
-        <select class="form-control" id="job_type"
-          name="job_type" required>
-          <option value="Full-time">Full-time</option>
-          <option value="Part-time">Part-time</option>
-          <option value="Contract">Contract</option>
-        </select>
-        @error('job_type')
-        <p>{{ $message }}</p>
-        @enderror
-      </div>
-
-      <!-- Posted At -->
-      <div class="form-group">
-        <label for="posted_at">Posted At</label>
-        <input type="date" class="form-control"
-          id="posted_at" name="posted_at">
-        @error('posted_at')
-        <p>{{ $message }}</p>
-        @enderror
-      </div>
-
-      <!-- Deadline Date -->
-      <div class="form-group">
-        <label for="deadline_date">Deadline Date</label>
-        <input type="date" class="form-control"
-          id="deadline_date" name="deadline_date">
-        @error('deadline_date')
-        <p>{{ $message }}</p>
-        @enderror
-      </div>
-
-      <button type="submit"
-        class="btn btn-primary">Submit</button>
-    </form>
+        <div class="flex justify-end">
+          <button type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Create
+            Job</button>
+        </div>
+      </form>
+    </div>
   </div>
+
 </x-app-layout>

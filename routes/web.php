@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Company_profileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IndividualController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Talent_ProfileController;
 use App\Http\Controllers\UserController;
@@ -19,18 +23,37 @@ Route::get("/dashboard", [DashboardController::class, "index"])->middleware(['au
 
 Route::get("/individual/{user}/dashboard", [IndividualController::class, "index"])->middleware(['auth', 'verified', "can:individual"])->name('individual.dashboard');
 
-Route::get("/find-talents", [IndividualController::class, "find_talents"])->middleware(['auth', 'verified', "can:individual_company"])->name('find_talents');
+Route::middleware(['auth'])->group(function () {
+  // display form
+  Route::get('/payment', [PaymentController::class, 'init'])->name('payment.init');
 
-Route::get("/talent-search", [IndividualController::class, "talent_search"])->middleware(['auth', 'verified', "can:individual_company"])->name('talent_search');
+  Route::post('/payment_form', [PaymentController::class, 'index'])->name('payment.index');
 
-// Route::post("/", [UserController::class, "store"])->middleware(['guest'])->name('user.store');
+  // Callback route after payment
+  Route::get('/payment/callback', [PaymentController::class, 'handleCallback'])->name('payment.callback');
+
+  // Webhook route for payment notifications
+  Route::post('/payment/webhook', [PaymentController::class, 'handleWebhook'])->name('payment.webhook');
+});
+
+/* messsages */
+Route::middleware(['auth'])->group(function () {
+  Route::get('/conversations', [MessageController::class, 'index'])->name('conversations.index');
+  Route::post('/conversations/{recipient}', [MessageController::class, 'store_conversation'])->name('conversations.store');
+
+  Route::get('/messages/{id}/to/{recipient}', [MessageController::class, 'show'])->name('messages.show');
+  Route::post('/messages/{recipient}/', [MessageController::class, 'store'])->name('messages.store');
+});
+
+
+
 
 Route::middleware('auth')->group(function () {
-  Route::get('/profile/{profile}', [UserController::class, 'edit'])->name('profile.edit');
+  Route::get('/profile/{user}', [UserController::class, 'edit'])->name('profile.edit');
 
-  Route::post('/profile/{profile}', [UserController::class, 'profile_img'])->name('profile.addimg');
+  Route::post('/profile/{user}', [UserController::class, 'profile_img'])->name('profile.addimg');
 
-  Route::patch('/profile/{profile}', [UserController::class, 'update'])->name('user.update');
+  Route::patch('/profile/{user}', [UserController::class, 'update'])->name('user.update');
 
   Route::delete('/profile', [UserController::class, 'destroy'])->name('profile.destroy');
 });
@@ -45,8 +68,14 @@ require base_path('routes/company.php');
 // jobs
 require base_path('routes/job.php');
 
-// jobs
+// project
 require base_path('routes/project.php');
+
+// application
+require base_path('routes/application.php');
+
+// admin
+require base_path('routes/admin.php');
 
 
 

@@ -41,6 +41,9 @@
       {{ $slot }}
     </main>
   </div>
+
+  <script src="https://js.paystack.co/v2/inline.js"></script>
+  <script src="//unpkg.com/alpinejs" defer></script>
 </body>
 
 </html>

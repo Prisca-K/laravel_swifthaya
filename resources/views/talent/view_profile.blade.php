@@ -4,45 +4,44 @@
       class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
       {{ __('Talent Dashboard') }}
     </h2>
-    <h3>{{$user_profile->first_name}}</h3>
+    <h3 class="text-xl">{{$talent_profile->userprofile->first_name . " " . $talent_profile->userprofile->last_name}}</h3>
   </x-slot>
-
-  <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div
-        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg flex justify-between items-center">
+  <div class="min-h-screen bg-gray-100 p-6">
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <h2 class="text-2xl font-semibold mb-4">Talent Profile
+        Details</h2>
+      <div>
+        <p><strong>Name:</strong> {{ $talent_profile->userprofile->first_name . " " . $talent_profile->userprofile->last_name }}
+        </p>
+        <p><strong>Email:</strong> {{ $talent_profile->userprofile->user->email
+          }}</p>
+        <p><strong>Skills:</strong> {{ $talent_profile->skills }}
+        </p>
+        <p><strong>Experience:</strong> 
+        {{(intval( $talent_profile->experience) > 1) ?  $talent_profile->experience . " " . "years" : $talent_profile->experience . " " . "year"}}
+        </p>
+        <p><strong>Education:</strong> {{
+          $talent_profile->education }}</p>
+        <p><strong>Portfolio:</strong> {{
+          $talent_profile->portfolio }}</p>
+        <p><strong>Status:</strong> {{
+          ucfirst($talent_profile->status) }}</p>
+      </div>
+      <div class="mt-4">
+        <a href="{{ route('talent.dashboard', Auth::user()->id) }}"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Back</a>
+        <a href="{{ route('talent.edit', $talent_profile->id) }}"
+          class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit</a>
+        {{-- <form
+          action="{{ route('talent.delete', $talent_profile->id) }}"
+          method="POST" class="inline">
+          @csrf
+          @method('DELETE')
+          <button type="submit"
+            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onclick="return confirm('Are you sure you want to delete this profile?');">Delete</button>
+        </form> --}}
       </div>
     </div>
   </div>
-  <div style="margin-left: 2rem" class="profile">
-    <h2>{{$user_profile->first_name . " " .
-      $user_profile->last_name}}</h2>
-    <p>Skills: {{$talent_profile->skills}}</p>
-    <p>Education: {{$talent_profile->education}}</p>
-    <p>Portfolio: {{$talent_profile->portfolio}}</p>
-    @if ($talent_profile)
-    <div class="flex w-10 mt-3">
-      <a class="flex justify-center items-center"
-        href="{{Route("talent.edit",[$talent_profile->id])}}"
-        style="border: 2px solid gray; padding:5px;
-        height:3rem; width:fit-content; border-radius:5px;
-        margin-right:
-        2rem">Edit
-        Profile
-      </a>
-      <form method="post" action="{{Route("talent.delete",[$talent_profile->id])}}">
-        @csrf
-        @method("delete")
-        <button class="flex justify-center items-center"
-          style="border: 2px solid gray; padding:5px;
-        height:3rem; border-radius:5px; margin-right:
-        2rem">Delete
-          Profile
-        </button>
-
-      </form>
-    </div>
-    @endif
-  </div>
-
 </x-app-layout>

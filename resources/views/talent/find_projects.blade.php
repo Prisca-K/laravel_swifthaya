@@ -96,14 +96,10 @@
         <div class="bg-white shadow-lg rounded-lg p-6">
           <h2 class="text-xl font-semibold mb-4">Project
             Results</h2>
-          @if($projects->isEmpty())
-          <p class="text-gray-700">No talents found matching
-            your criteria.</p>
-          @else
           <div
             class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @foreach($projects as $project)
-            <div class="p-4 border rounded-lg bg-gray-50">
+            @forelse($projects as $project)
+            <a href="{{Route("project.details", $project->id)}}" class="p-4 border rounded-lg bg-gray-50">
               <h3 class="text-lg font-semibold">
                 {{$project->title}}</h3>
               <p class="text-gray-700">
@@ -117,15 +113,17 @@
                   class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium mr-2 mb-2">
                   {{$project->required_skills}}</span>
               </div>
-            </div>
-            @endforeach
+            </a>
+            @empty
+            <p class="text-gray-700">No talents found matching
+              your criteria.</p>
+            @endforelse
           </div>
 
           <!-- Pagination -->
           <div class="mt-6">
-            {{-- {{ $projects->links() }} --}}
+            {{ $projects->links() }}
           </div>
-          @endif
         </div>
       </div>
     </div>

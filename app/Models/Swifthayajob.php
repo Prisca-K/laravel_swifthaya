@@ -26,8 +26,16 @@ class Swifthayajob extends Model
     'deadline_date' => 'datetime',
   ];
 
-  public function companyprofile()
+  // public function companyprofile()
+  // {
+  //   return $this->belongsTo(Company_profile::class, 'company_id');
+  // }
+  public function user()
   {
-    return $this->belongsTo(Company_profile::class);
+      return $this->belongsTo(User::class, 'company_id');
+  }
+  public function application()
+  {
+    return $this->hasMany(Application::class);
   }
 }

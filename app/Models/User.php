@@ -61,8 +61,26 @@ class User extends Authenticatable
   {
     return $this->hasOne(Individual::class);
   }
-  public function projects()
+  public function project()
   {
-    return $this->hasMany(Project::class);
+    return $this->hasMany(Project::class, "poster_id");
   }
+  public function applications()
+  {
+    return $this->hasMany(Application::class, 'applicant_id');
+  }
+  public function swifthayajobs()
+  {
+    return $this->hasMany(SwifthayaJob::class, 'company_id');
+  }
+  public function sentMessages()
+  {
+    return $this->hasMany(Message::class, 'sender_id');
+  }
+
+  public function receivedMessages()
+  {
+    return $this->hasMany(Message::class, 'recipient_id');
+  }
+  
 }

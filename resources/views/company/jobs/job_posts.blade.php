@@ -1,51 +1,71 @@
 <x-app-layout>
-  <x-slot name="header">
-    <h2
-      class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-      {{ __('Company Dashboard') }}
-    </h2>
-  </x-slot>
 
+  <div class="min-h-screen bg-gray-100 p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-semibold">All Jobs </h1>
+      <a href="{{ route('job.create', Auth::user()->id) }}"
+        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add
+        New Job</a>
+    </div>
 
-  <div class="py-12">
-    <h2
-      style="font-size:1.5rem; text-align:center;margin-bottom:2rem">
-      My Jobs
-    </h2>
+    @if (session('success'))
     <div
-      style="max-width:80%; background-color:rgba(128, 128, 128, 0.27);display:flex;flex-wrap:wrap"
-      class="mx-auto p-6 items-center justify-center gap-4 ">
-      @if ($jobs)
-      @forelse ($jobs as $job)
-      <div style="min-width: 15rem"
-        class="bg-white shadow-sm sm:rounded-lg flex items-center justify-center flex-col p-6">
-        <div class="p-6">
-          <h3 style="font-size:1.2rem;">{{$job->title}}</h3>
-          <p>Description: {{$job->description}}</p>
-          <p>Required Skills: {{$job->required_skills}}</p>
-          <p>Salary Range: {{$job->salary_range}}</p>
-          <p>Job Type: {{$job->job_type}}</p>
-          <p>Deadline: {{$job->deadline_date}}</p>
-        </div>
+      class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+      role="alert">
+      <strong class="font-bold">{{ session('success')
+        }}</strong>
+    </div>
+    @endif
 
-        <a class=" w-3/4 flex justify-center items-center"
-          href="{{Route("job.show", $job->id)}}"
-          style="border: 2px solid gray; padding:5px;
-          height:3rem; border-radius:5px;">View Job
-        </a>
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-2">Title</th>
+            <th class="px-4 py-2">Company</th>
+            <th class="px-4 py-2">Staus</th>
+            <th class="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($jobs as $job)
+          <tr>
+            <td class="border px-4 py-2">{{ $job->title }}
+            </td>
+            <td class="border px-4 py-2">{{
+              ($job->user->userprofile->companyprofile) ?
+              $job->user->userprofile->companyprofile->company_name
+              : "No company profile yet"}}</td>
 
+            <td class="border px-4 py-2">
+              @if($job->status === 'approved')
+              <span class="text-green-500">Approved</span>
+              @elseif($job->user->status ==='rejected')
+              <span class="text-red-500">Rejected</span>
+              @else
+              <span class="text-yellow-500">Pending</span>
+              @endif
+            </td>
+
+            <td class="border px-4 py-2">
+              <a href="{{ route('job.show', $job->id) }}"
+                class="text-blue-600 hover:text-blue-900 mr-3">View Job
+              </a>
+            </td>
+          </tr>
+          @empty
+          <tr>
+            <td class="text-2xl">
+              No Job created Yet
+            </td>
+          </tr>
+          @endforelse
+        </tbody>
+      </table>
+
+      <div class="mt-6">
+        {{-- {{ $jobs->links() }} --}}
       </div>
-
-      @empty
-      <p style="font-size:1.2rem;">No Jobs Created Yet</p>
-      @endforelse
-      <a class=" w-3/4 flex justify-center items-center"
-        href="{{Route("job.create", [$job->company_id])}}"
-        style="border: 2px solid gray; padding:5px;
-        height:3rem; border-radius:5px;">Post Job
-      </a>
-      @endif
-
     </div>
   </div>
 </x-app-layout>

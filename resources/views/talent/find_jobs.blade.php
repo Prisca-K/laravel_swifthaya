@@ -54,6 +54,12 @@
                 <option value="figma" {{
                   request('required_skills')=='figma'
                   ? 'selected' : '' }}>Figma</option>
+                <option value="seo" {{
+                  request('required_skills')=='seo'
+                  ? 'selected' : '' }}>Seo</option>
+                <option value="photoshop" {{
+                  request('required_skills')=='photoshop'
+                  ? 'selected' : '' }}>Photoshop</option>
               </select>
             </div>
 
@@ -100,7 +106,7 @@
                 <option value="part-time" {{
                   request('job_type')=='part-time'
                   ? 'selected' : '' }}>Part-time</option>
-                <option value="3" {{
+                <option value="contract" {{
                   request('job_type')=='Contract '
                   ? 'selected' : '' }}>Contract </option>
               </select>
@@ -117,14 +123,12 @@
         <div class="bg-white shadow-lg rounded-lg p-6">
           <h2 class="text-xl font-semibold mb-4">Job
             Results</h2>
-          @if($jobs->isEmpty())
-          <p class="text-gray-700">No talents found matching
-            your criteria.</p>
-          @else
+         
           <div
             class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @foreach($jobs as $job)
-            <div class="p-4 border rounded-lg bg-gray-50">
+            @forelse($jobs as $job)
+            <a href="{{Route("job.details",$job->id)}}"
+              class="p-4 border rounded-lg bg-gray-50">
               <h3 class="text-lg font-semibold">
                 {{$job->title}}</h3>
               <p class="text-gray-700">
@@ -144,15 +148,17 @@
                   {{$job->required_skills}}</span>
                 {{-- @endforeach --}}
               </div>
-            </div>
-            @endforeach
+            </a>
+            @empty
+            <p class="text-gray-700">No talents found matching
+              your criteria.</p>
+            @endforelse
           </div>
 
           <!-- Pagination -->
           <div class="mt-6">
-            {{-- {{ $jobs->links() }} --}}
+            {{ $jobs->links() }}
           </div>
-          @endif
         </div>
       </div>
     </div>
