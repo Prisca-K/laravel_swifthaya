@@ -25,9 +25,9 @@
         </div>
         <div class="ml-6">
           <h1 class="text-3xl font-bold text-gray-900">{{
-           $company_profile->company_name }}</h1>
+           $user_profile->companyprofile->company_name }}</h1>
           <p class="text-xl text-gray-600 mt-2">
-            {{ ucfirst($company_profile->industry) }}
+            {{ ucfirst($user_profile->companyprofile->industry) }}
           </p>
           <p class="text-xl text-gray-600 mt-2">
             {{ ucfirst($user_profile->user->user_type) }}
@@ -105,9 +105,9 @@
             Website</h2>
           <ul
             class="list-disc list-inside text-gray-700 space-y-2">
-            <li><a href="{{$company_profile->website}}"
+            <li><a href="{{$user_profile->companyprofile->website}}"
                 target="_blank"
-                class="text-blue-600 hover:underline">{{$company_profile->website}}</a></li>
+                class="text-blue-600 hover:underline">{{$user_profile->companyprofile->website}}</a></li>
           </ul>
         </div>
       </div>

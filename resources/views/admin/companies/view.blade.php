@@ -5,25 +5,25 @@
         Profile Details</h2>
       <div>
         <p><strong>Company Name:</strong> {{
-          $profile->company_name }}</p>
-        <p><strong>Email:</strong> {{ $profile->user->email
+          $company->company_name }}</p>
+        <p><strong>Email:</strong> {{ $company->userprofile->user->email
           }}</p>
-        <p><strong>Industry:</strong> {{ $profile->industry
+        <p><strong>Industry:</strong> {{ $company->industry
           }}</p>
-        <p><strong>Location:</strong> {{ $profile->location
+        <p><strong>Location:</strong> {{ $company->userprofile->location
           }}</p>
-        <p><strong>Website:</strong> {{ $profile->website }}
+        <p><strong>Website:</strong> {{ $company->userprofile->website }}
         </p>
         <p><strong>Status:</strong> {{
-          ucfirst($profile->status) }}</p>
+          ucfirst($company->status) }}</p>
       </div>
       <div class="mt-4">
-        <a href="{{ route('admin.company_management.index') }}"
+        <a href="{{ route('admin.companies') }}"
           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Back</a>
-        <a href="{{ route('admin.company_management.edit', $profile->id) }}"
+        <a href="{{ route('admin.companies.edit', $company->id) }}"
           class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit</a>
         <form
-          action="{{ route('admin.company_management.delete', $profile->id) }}"
+          action="{{ route('admin.companies.destroy', $company->id) }}"
           method="POST" class="inline">
           @csrf
           @method('DELETE')

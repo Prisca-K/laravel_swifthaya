@@ -76,8 +76,7 @@ class IndividualController extends Controller
       });
     }
 
-    $talents = $query->paginate(10);
-
-    return view($this->getViewPath('find_talent', Auth::user()->user_type), compact("talents"));
+    $talents = $query->latest()->paginate(4);
+    return view('shared.find_talent',compact("talents"));
   }
 }

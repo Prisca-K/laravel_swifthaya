@@ -1,64 +1,54 @@
 <x-app-layout>
   <x-slot name="header">
-    <h2
-      class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-      {{ __('View Project') }}
-    </h2>
+    <div class="flex justify-between">
+      <h2
+        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        {{ __('Individual Dashboard') }}
+      </h2>
+      <a href="{{ route("projects", [$project->poster_id]) }}"
+        class="bg-green-800 text-white px-4 py-2 rounded hover:bg-green-600">All Projects</a>
+    </div>
   </x-slot>
 
 
-  <div class="py-12">
-    <h2
-      style="font-size:1.5rem; text-align:center;margin-bottom:2rem">
-      My Project
-    </h2>
-    <div
-      style="max-width:80%; background-color:rgba(128, 128, 128, 0.27);display:flex;flex-wrap:wrap"
-      class=" mx-auto p-6 items-center justify-center gap-4 flex-col">
-      <div style="min-width: 15rem"
-        class="bg-white shadow-sm sm:rounded-lg flex items-center justify-center flex-col p-6">
-        <div class="p-6">
-          <h3 style="font-size:1.2rem;">{{$project->title}}</h3>
-          <p>Description: {{$project->description}}</p>
-          <p>Required Skills: {{$project->required_skills}}</p>
-          <p>Budget: {{$project->budget}}</p>
-          <p>Duration: {{$project->duration}}</p>
-          <p>Deadline: {{$project->deadline_date}}</p>
-        </div>
+   <div class="min-h-screen bg-gray-100 p-6">
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <h2 class="text-2xl font-semibold mb-4">Project
+        Details</h2>
+      <div>
+        <p><strong>Name:</strong> {{ $project->title }}
 
-
-        <div class="w-full buttons flex gap-4">
-          <a class="flex justify-center items-center"
-          href="{{Route("project.applicants", $project->id)}}"
-          style="border: 2px solid gray; padding:10px;
-          height:3rem; border-radius:5px; margin-right:
-          1rem">Application history
-          </a>
-          <a class=" flex justify-center items-center"
-            href="{{Route("project.edit", $project->id)}}"
-            style="border: 2px solid gray; padding:10px;
-            height:3rem; border-radius:5px;">Edit Project
-          </a>
-
-          <form
-            class="flex justify-center items-center"
-            method="post"
-            action="{{Route("project.destroy", $project->id)}}">
-            @csrf
-            @method("delete")
-            <button
-              class="flex w-full justify-center items-center"
-              href="" style="border: 2px solid gray; padding:10px;
-          height:3rem; border-radius:5px;">Delete Project
-            </button>
-          </form>
-        </div>
+        <p><strong>Skills:</strong> {{ $project->required_skills }}
+        </p>
+        <p><strong>Duration:</strong> 
+        {{(intval( $project->duration) > 1) ?  $project->duration . " " . "months" : $project->duration . " " . "month"}}
+        </p>
+        <p><strong>Budget:</strong> ${{
+          $project->budget }}</p>
+        <p><strong>Description:</strong> {{
+          $project->description }}</p>
+        <p><strong>Deadline Date</strong> {{
+          ucfirst($project->deadline_date) }}</p>
       </div>
-      <a class="w-2/4 flex justify-center items-center"
-        href="{{Route("projects",Auth::id())}}"
-        style="border: 2px solid gray; padding:10px;
-      height:3rem; border-radius:5px;">All Projects
-      </a>
+      <div class="mt-4">
+        <a href="{{ route('company.dashboard', Auth::user()->id) }}"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Back</a>
+        <a href="{{ route('project.edit', $project->id) }}"
+          class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit</a>
+        <a href="{{Route("project.applicants", $project->id)}}"
+          class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Application history</a>
+        <form
+          action="{{ route('project.destroy', $project->id) }}"
+          method="POST" class="inline">
+          @csrf
+          @method('DELETE')
+          <button type="submit"
+            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onclick="return confirm('Are you sure you want to delete this profile?');">Delete</button>
+        </form>
+      </div>
     </div>
+
   </div>
-</x-app-layout>
+  
+  </x-app-layout>

@@ -25,7 +25,7 @@ Route::get("/project{project}/details", [ProjectController::class, "project_deta
 
 // search routes
 
-Route::get("/find-projects", [Talent_ProfileController::class, "find_projects"])->middleware(['auth', 'verified', "can:talent"])->name('find_projects');
+// Route::get("/find-projects", [Talent_ProfileController::class, "find_projects"])->middleware(['auth', 'verified', "can:talent"])->name('find_projects');
 
 Route::get("/project_search", [Talent_ProfileController::class, "project_search"])->middleware(['auth', 'verified', "can:talent"])->name('project_search');
 

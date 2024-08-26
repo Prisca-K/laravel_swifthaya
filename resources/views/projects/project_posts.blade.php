@@ -1,78 +1,67 @@
 <x-app-layout>
-  <x-slot name="header">
-    <h2
-      class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-      {{ __('MY Project Posts') }}
-    </h2>
-  </x-slot>
-{{-- 
-  <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div
-        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-        <div
-          class="p-6 text-gray-900 dark:text-gray-100 flex justify-between items-center">
-          <p>{{ __("You're logged in!") }}</p>
-          <a class="flex justify-center items-center"
-            href="{{Route("project.create",$user->id)}}"
-            style="border: 2px solid gray; padding:5px;
-            height:3rem; border-radius:5px;">Post Project
-          </a>
-          <a class="flex justify-center items-center" 
-          href="{{Route("profile.edit", $user->id)}}"
-          style="border: 2px solid gray; padding:5px;
-          height:3rem; border-radius:5px; margin-right:
-          2rem">Profile
-        </a>
-          <a class="flex justify-center items-center" 
-          href="{{Route("find_talents", $user->id)}}"
-          style="border: 2px solid gray; padding:5px;
-          height:3rem; border-radius:5px; margin-right:
-          2rem">Find Talents
-        </a>
-        </div>
 
-      </div>
+  <div class="min-h-screen bg-gray-100 p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-semibold">Project Management
+      </h1>
+      <a href="{{ route('admin.projects.create') }}"
+        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add
+        New Project</a>
     </div>
-  </div> --}}
-  <h2
-    style="font-size:1.5rem; text-align:center;margin-bottom:2rem">
-    My Projects
-  </h2>
-  <div class="py-12">
-    <div
-      style="max-width:80%; background-color:rgba(128, 128,
-      128, 0.27); display:flex; flex-wrap:wrap"
-      class=" mx-auto p-6 items-center justify-center gap-4">
-      @forelse ($projects as $project)
-      <div style="min-width: 20rem; max-width: 20rem"
-        class="bg-white shadow-sm sm:rounded-lg flex items-center justify-center flex-col p-6">
-        <div class="p-6 text-wrap">
-          <h3 style="font-size:1.2rem;">{{$project->title}}
-          </h3>
-          <p>Description: {{$project->description}}</p>
-          <p>Required Skills: {{$project->required_skills}}
-          </p>
-          <p>Budget: {{$project->budget}}</p>
-          <p>Duration: {{$project->duration}}</p>
-          <p>Deadline: {{$project->deadline_date}}</p>
-        </div>
 
-        <a class=" w-3/4 flex justify-center items-center"
-        href="{{Route("project.show", $project->id)}}"
-        style="border: 2px solid gray; padding:5px;
-        height:3rem; border-radius:5px;">View Project
-        </a>
+    @if (session('success'))
+    <div
+      class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+      role="alert">
+      <strong class="font-bold">{{ session('success')
+        }}</strong>
+    </div>
+    @endif
+
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-2">Title</th>
+            <th class="px-4 py-2">Company</th>
+            <th class="px-4 py-2">Status</th>
+            <th class="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($projects as $project)
+          <tr>
+            <td class="border px-4 py-2">{{ $project->title
+              }}</td>
+            <td class="border px-4 py-2">{{
+              $project->user->userprofile->first_name . " "
+              . $project->user->userprofile->last_name }}
+            </td>
+
+            <td class="border px-4 py-2">
+              @if($project->status === 'approved')
+              <span class="text-green-500">Approved</span>
+              @elseif($project->user->status ==='rejected')
+              <span class="text-red-500">Rejected</span>
+              @else
+              <span class="text-yellow-500">Pending</span>
+              @endif
+            </td>
+
+            <td class="border px-4 py-2">
+              <a href="{{ route('project.show', $project->id) }}"
+                class="text-green-600 hover:text-green-900 mr-3">View Job
+              </a>
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+
+      <div class="mt-6">
+        {{-- {{ $projects->links() }} --}}
       </div>
-      @empty
-      <p>No Projects Posted Yet</p>
-      {{-- <a class="w-3/4 flex justify-center items-center"
-        href="{{Route("projects", [$project->poster_id,
-        $project->id])}}"
-        style="border: 2px solid gray; padding:5px;
-        height:3rem; border-radius:5px;">All Projects
-      </a> --}}
-      @endforelse
     </div>
   </div>
+
 </x-app-layout>

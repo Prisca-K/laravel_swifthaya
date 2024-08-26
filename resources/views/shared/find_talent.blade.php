@@ -2,7 +2,11 @@
   <x-slot name="header">
     <h2
       class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+      @if (Auth::user()->user_type === "company")
+      {{ __('Company Dashboard') }}
+      @else
       {{ __('Individual Dashboard') }}
+      @endif
     </h2>
   </x-slot>
 
@@ -106,13 +110,9 @@
         <div class="bg-white shadow-lg rounded-lg p-6">
           <h2 class="text-xl font-semibold mb-4">Talent
             Results</h2>
-          @if($talents->isEmpty())
-          <p class="text-gray-700">No talents found matching
-            your criteria.</p>
-          @else
           <div
             class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @foreach($talents as $talent)
+            @forelse($talents as $talent)
             <a href="{{Route("talent.details",$talent->id
               )}}" class="p-4 border rounded-lg bg-gray-50">
               <div class="flex items-center mb-4">
@@ -134,7 +134,7 @@
               <p class="text-gray-700">
                 {{$talent->education}}</p>
               <p class="text-gray-700">
-                {{$talent->experience }} year/years
+                {{(intval($talent->experience) > 1) ? $talent->experience . " " . "years" : $talent->experience . " " . "year" }}
                 experience</p>
               <div class="mt-2 flex flex-wrap">
                 {{-- @foreach($talent->skills as $skill)
@@ -145,14 +145,16 @@
                 {{-- @endforeach --}}
               </div>
             </a>
-            @endforeach
+            @empty
+            <p class="text-gray-700">No talents found matching
+              your criteria.</p>
+            @endforelse
           </div>
 
           <!-- Pagination -->
           <div class="mt-6">
-            {{-- {{ $talents->links() }} --}}
+            {{ $talents->links() }}
           </div>
-          @endif
         </div>
       </div>
     </div>

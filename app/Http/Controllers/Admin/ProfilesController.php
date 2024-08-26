@@ -95,6 +95,11 @@ class ProfilesController extends Controller
   }
   public function createCompany(User_profile $user_profile)
   {
+    $hasProfile = Company_profile::where("user_profile_id", $user_profile->id)->exists();
+    $company = Company_profile::where("user_profile_id", $user_profile->id)->first();
+    if ($hasProfile) {
+     return redirect()->route("admin.companies.view", $company->id);
+    }
     return view('admin.companies.create', compact("user_profile"));
   }
   public function storeCompany(StoreCompany_profileRequest $request, User_profile $user_profile)
@@ -108,8 +113,8 @@ class ProfilesController extends Controller
   // View Company Profile Details
   public function viewCompany(Company_profile $company)
   {
-    $profile = Company_profile::findOrFail($company->id);
-    return view('admin.companies.view', compact('profile'));
+    $company = Company_profile::findOrFail($company->id);
+    return view('admin.companies.view', compact('company'));
   }
 
   // Edit Company Profile

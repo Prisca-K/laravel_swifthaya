@@ -25,7 +25,7 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          @foreach($applications as $application)
+          @forelse($applications as $application)
           <tr>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
@@ -76,7 +76,7 @@
                 View
               </a>
               @if ($application->status === "Accepted")
-              <a href="{{-- {{ route('applicants.show', $application->id) }} --}}"
+              <a href="{{ route('conversations.index') }}"
                 class="px-2 border-2 rounded-full bg-green-100 text-green-600 hover:text-green-900 mr-1">
                 Interview
               </a>
@@ -104,7 +104,9 @@
               </form>
             </td>
           </tr>
-          @endforeach
+          @empty
+          <tr><td class="px-6 py-4 whitespace-nowrap text-gray-700">Candidates are yet to apply </p></tr>
+          @endforelse
         </tbody>
       </table>
       <!-- Pagination -->

@@ -12,7 +12,7 @@ Route::get("/talents/{user_profile}/create-profile", [Talent_ProfileController::
 
 Route::post("/talents/{user_profile}/create", [Talent_ProfileController::class, "store"])->middleware(['auth', 'verified', "can:talent"])->name('talent.store');
 
-Route::get("/talents/{user_profile}/profile", [Talent_ProfileController::class, "show"])->middleware(['auth', 'verified', "can:talent"])->name('talent.show');
+Route::get("/talents/{talent_profile}/profile", [Talent_ProfileController::class, "show"])->middleware(['auth', 'verified', "can:talent"])->name('talent.show');
 
 Route::get("/talents/{talent_profile}/edit", [Talent_ProfileController::class, "edit"])->middleware(['auth', 'verified', "can:talent"])->name('talent.edit');
 

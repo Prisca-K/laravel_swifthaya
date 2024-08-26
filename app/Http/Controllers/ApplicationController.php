@@ -156,20 +156,20 @@ class ApplicationController extends Controller
   }
 
 
+  public function showjob(Application $application)
+  {
+    // dd($application->swifthayajob);
+
+    return view("shared.view_application_details", compact("application"));
+  }
   public function show(Application $application)
   {
     // dd($application->swifthayajob);
 
-    return view("view_applicants_details", compact("application"));
+    return view("shared.view_applicants_details", compact("application"));
   }
 
-  public function showJob(Application $application)
-  {
-    // dd($application->swifthayajob_id);
 
-
-    return view("view_application_details", compact("application"));
-  }
 
   public function accept(Application $application)
   {

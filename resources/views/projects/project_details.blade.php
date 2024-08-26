@@ -25,7 +25,7 @@
         </div>
         <div class="ml-6">
           <h1 class="text-3xl font-bold text-gray-900">{{
-           $user_profile->first_name . " " . $user_profile->last_name}}</h1>
+           $user_profile->companyprofile->company_name}}</h1>
 
           <p class="text-xl text-gray-600 mt-2">
             {{ ucfirst($user_profile->user->user_type) }}

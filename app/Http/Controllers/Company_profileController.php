@@ -21,7 +21,7 @@ class Company_profileController extends Controller
    */
   public function index(User $user)
   {
-    if ($user->user_type !== "admin" || $user->id !== Auth::user()->id) {
+    if ($user->user_type !== "admin" && $user->id !== Auth::user()->id) {
       abort("403");
     }
     $user_profile = User_profile::where("user_id", $user->id)->first();

@@ -121,14 +121,14 @@ class SwifthayajobController extends Controller
     return view("company.jobs.job_offers", compact("jobs", "projects", "candidate", "hasproject"));
   }
 
-  // view job appliccants
+  // view job applicants
   public function view_job_applicants(Swifthayajob $job)
   {
 
     Gate::authorize("update", $job);
     $applications = Application::where("swifthayajob_id", $job->id)->get();
     $isjob = true;
-    return view("view_applicants", compact("job", "applications", "isjob"));
+    return view("shared.view_applicants", compact("job", "applications", "isjob"));
   }
   public function view_project_applicants(Project $project)
   {
@@ -136,6 +136,6 @@ class SwifthayajobController extends Controller
     Gate::authorize("update", $project);
     $applications = Application::where("project_id", $project->id)->get();
     $isjob = false;
-    return view("view_applicants", compact("project", "applications", "isjob"));
+    return view("shared.view_applicants", compact("project", "applications", "isjob"));
   }
 }

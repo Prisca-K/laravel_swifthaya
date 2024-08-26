@@ -141,7 +141,7 @@
           <div id="dropdownMenu" class="absolute hidden bg-white shadow-lg rounded w-full mt-1">
               @if ($checkJobCandidates)
                 @foreach ($jobCandidates as $candidate)
-                    <form method="POST" action="{{ route('conversation.store', $candidate->id) }} " class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                    <form method="POST" action="{{ route('conversations.store', $candidate->id) }} " class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
                       @csrf
                       <button type="submit" class="w-full">
                         {{ $candidate->userprofile->first_name }} {{ $candidate->userprofile->last_name }}
@@ -151,7 +151,7 @@
               @endif
               @if ($checkProjectCandidates)
               @foreach ($projectCandidates as $candidate)
-                    <form method="POST" action="{{ route('conversation.store', $candidate->id) }} " class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                    <form method="POST" action="{{ route('conversations.store', $candidate->id) }} " class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
                       @csrf
                       <button type="submit" class="w-full">
                         {{ $candidate->userprofile->first_name }} {{ $candidate->userprofile->last_name }}
@@ -164,7 +164,9 @@
       </div>
       @else
       <p class="text-center mt-3">
+        @if (!$conversation)
         Candidates have not applied to any job/project
+        @endif
       </p>
       @endif
     

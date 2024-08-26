@@ -14,28 +14,56 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
-  // public function index(User $recieverId)
-  // {
-  //   $conversations = Message::where(["sender_id" => Auth::user()->id, "recipient_id" => $recieverId->id])->get();
-  //   // dd($conversations->receiver);
-  //   return view("messages", compact("conversations"));
-  // }
-  public function index(User $recipient)
+
+  public function index()
   {
     $employerId = Auth::user()->id;
 
+    // make sure user is not talent
+    $user = User::where("id", Auth::user()->id)->first();
+    $canMessage = true;
+    if ($user->user_type === "talent") {
+      $canMessage = false;
+    }
+
     // check if any candidates have applied to any job posted by the employer
-    $checkJobCandidates = User::whereHas('applications', function ($query) use ($employerId) {
+    $checkJobCandidates = false;
+    $hasJobCandidates = User::whereHas('applications', function ($query) use ($employerId) {
       $query->whereHas('swifthayajob', function ($subQuery) use ($employerId) {
         $subQuery->where('company_id', $employerId);
       });
     })->with('userprofile')->exists();
+    $JobCandidates = User::whereHas('applications', function ($query) use ($employerId) {
+      $query->whereHas('swifthayajob', function ($subQuery) use ($employerId) {
+        $subQuery->where('company_id', $employerId);
+      });
+    })->with('userprofile')->get();
+    $hasjobconversation = false;
+    foreach ($JobCandidates as $cand) {
+      $hasjobconversation = Conversation::where(["user_id" => $employerId, "recipient_id" => $cand->id])->exists();
+      $checkJobCandidates = $hasJobCandidates && $hasjobconversation === false;
+    }
+    // dd($checkJobCandidates, $JobCandidates);
 
-    $checkProjectCandidates = User::whereHas('applications', function ($query) use ($employerId) {
+    // check if any candidates have applied to any project posted by the employer
+    $checkProjectCandidates = false;
+    $hasProjectCandidates = User::whereHas('applications', function ($query) use ($employerId) {
       $query->whereHas('project', function ($subQuery) use ($employerId) {
         $subQuery->where('poster_id', $employerId);
       });
     })->with('userprofile')->exists();
+
+    $ProjectCandidates = User::whereHas('applications', function ($query) use ($employerId) {
+      $query->whereHas('project', function ($subQuery) use ($employerId) {
+        $subQuery->where('poster_id', $employerId);
+      });
+    })->with('userprofile')->get();
+    $hasprojectconversation = false;
+    foreach ($ProjectCandidates as $cand) {
+      $hasprojectconversation = Conversation::where(["user_id" => $employerId, "recipient_id" => $cand->id])->exists();
+      $checkProjectCandidates = $hasProjectCandidates && !$hasprojectconversation;
+    }
+
 
     // Fetch candidates who have applied to any job posted by the employer
 
@@ -74,19 +102,14 @@ class MessageController extends Controller
         $query->latest();
       }])->get();
     // dd($recipient->id);
-    $user = User::where("id", Auth::user()->id)->first();
 
-    // dd($user->user_type);
-    $canMessage = true;
-    if ($user->user_type === "talent") {
-      $canMessage = false;
-    }
     $isNewConversation = false;
     if (count($conversations)  === 0) {
       $isNewConversation = true;
     }
     $activeConversation = false;
-    return view('messages', compact('conversations', 'activeConversation', 'recipient', 'isNewConversation', 'canMessage', 'jobCandidates', 'projectCandidates', 'checkCandidates', 'checkJobCandidates', 'checkProjectCandidates'));
+    // dd($conversations);
+    return view('messages', compact('conversations', 'activeConversation', 'isNewConversation', 'canMessage', 'jobCandidates', 'projectCandidates', 'checkCandidates', 'checkJobCandidates', 'checkProjectCandidates'));
   }
 
   public function show(Conversation $id, User $recipient)
@@ -180,7 +203,7 @@ class MessageController extends Controller
     }
 
     if ($recipient->user_type === "company" || $recipient->user_type === "individual") {
-      return redirect()->route('messages.index', $recipient->id)->with('error', "Can't create conversation with an employer");
+      return redirect()->route('conversations.index', $recipient->id)->with('error', "Can't create conversation with an employer");
     }
     if ($user->user_type === "company") {
       $employerId = $user->id;
@@ -193,7 +216,7 @@ class MessageController extends Controller
       })->where('applicant_id', $recipient->id)->exists();
       // dd($hasAppliedProject);
       if ($hasAppliedJob === false && $hasAppliedProject === false) {
-        return redirect()->route('messages.index', $recipient->id)->with('error', "Can't create conversation with candidate who has not applied");
+        return redirect()->route('conversations.index', $recipient->id)->with('error', "Can't create conversation with candidate who has not applied");
       }
     }
     if ($user->user_type === "individual") {
@@ -203,7 +226,7 @@ class MessageController extends Controller
       })->where('applicant_id', $recipient->id)->exists();
       if ($hasApplied === false) {
         // dd("existnot");
-        return redirect()->route('messages.index', $recipient->id)->with('error', "Can't create conversation with candidate who has not applied");
+        return redirect()->route('conversations.index', $recipient->id)->with('error', "Can't create conversation with candidate who has not applied");
       }
     }
 
@@ -211,7 +234,7 @@ class MessageController extends Controller
 
     // dd($conversationExists, $recipient->id);
     if ($conversationExists === true) {
-      return redirect()->route('messages.index', $recipient->id)->with('error', "Can't create conversation with the same candidate twice");
+      return redirect()->route('conversations.index', $recipient->id)->with('error', "Can't create conversation with the same candidate twice");
     }
     $conversation = Conversation::create([
       'recipient_id' => $recipient->id,
@@ -222,7 +245,7 @@ class MessageController extends Controller
     if ($conversation->user_id !== Auth::user()->id && $conversation->recipient_id !== Auth::user()->id) {
       abort(403, 'Unauthorized access to this conversation.');
     }
-    return redirect()->route('messages.index', $recipient->id)->with('success', 'Message sent successfully.');
+    return redirect()->route('conversations.index', $recipient->id)->with('success', 'Message sent successfully.');
   }
 
   public function store(Request $request, User $recipient)
@@ -236,7 +259,7 @@ class MessageController extends Controller
         ->exists();
       // dd($hasMessaged, $recipient->id);
       if (!$hasMessaged) {
-        return redirect()->route('messages.index', $recipient->id)->with('error', "Can't send messages, till employer sends first message");
+        return redirect()->route('conversations.index', $recipient->id)->with('error', "Can't send messages, till employer sends first message");
       }
     }
 
@@ -258,6 +281,6 @@ class MessageController extends Controller
       'status'
     ]);
 
-    return redirect()->route('messages.index')->with('success', 'Message sent successfully.');
+    return redirect()->route('conversations.index')->with('success', 'Message sent successfully.');
   }
 }

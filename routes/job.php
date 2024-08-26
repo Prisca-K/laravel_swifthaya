@@ -25,7 +25,6 @@ Route::get("/job{job}/details", [SwifthayajobController::class, "job_details"])-
 
 // search routes
 // job
-Route::get("/find-jobs", [Talent_ProfileController::class, "find_jobs"])->middleware(['auth', 'verified', "can:talent"])->name('find_jobs');
 
 Route::get("/job_search", [Talent_ProfileController::class, "job_search"])->middleware(['auth', 'verified', "can:talent"])->name('job_search');
 
