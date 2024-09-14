@@ -41,7 +41,7 @@
             <td class="border px-4 py-2">
               @if($project->status === 'approved')
               <span class="text-green-500">Approved</span>
-              @elseif($project->status === 'rejected')
+              @elseif($project->user->status ==='rejected')
               <span class="text-red-500">Rejected</span>
               @else
               <span class="text-yellow-500">Pending</span>
@@ -49,7 +49,7 @@
             </td>
 
             <td class="border px-4 py-2">
-              @if($project->status === 'pending')
+              @if($project->status ==='pending')
               <a href="{{ route('admin.projects.approve', $project->id) }}"
                 class="text-green-600 hover:text-green-900 mr-2">Approve</a>
               <a href="{{ route('admin.projects.reject', $project->id) }}"

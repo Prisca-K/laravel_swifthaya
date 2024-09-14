@@ -16,4 +16,4 @@ Route::patch('/applicants/{application}/reject', [ApplicationController::class, 
 
 // talent
 
-Route::get('/applications/{application}', [ApplicationController::class, 'job_details'])->middleware(['auth', 'verified', "can:talent"])->name('applications.job_details');
+Route::get('/applications/{application}', [ApplicationController::class, 'showjob'])->middleware(['auth', 'verified', "can:talent"])->name('applications.showjob');

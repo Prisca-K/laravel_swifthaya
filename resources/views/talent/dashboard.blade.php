@@ -5,7 +5,7 @@
         class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         {{ __('Talent Dashboard') }}
       </h2>
-      <a href="{{Route("profile.edit")}}">
+      <a href="{{Route("profile.edit", Auth::user()->id)}}">
         <img class="w-12 h-12 object-cover rounded-full" src="{{Auth::user()->userprofile->getImgUrl()}}" alt="">
       </a>
     </div>
@@ -21,20 +21,16 @@
         </div>
         @if ($talent_profile)
         <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          href="{{Route("talent.show")}}"
+          href="{{Route("talent.show", [$talent_profile->id])}}"
           >Talent Profile
         </a>
-          <a href="{{ Route("project.application_history") }}"
+          <a href="{{ Route("talent.project.apply.history", Auth::user()->id) }}"
           class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           Project Application history
           </a>
-          <a href="{{ Route("job.application_history") }}"
+          <a href="{{ Route("talent.job.apply.history", Auth::user()->id) }}"
           class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           Job Application history
-          </a>
-          <a href="{{ Route("tracking.index") }}"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          Job / Project Tracker
           </a>
           <a href="{{ Route("conversations.index") }}"
           class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -43,11 +39,15 @@
         @else
        
         <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          href="{{Route("talent.create")}}">
+          href="{{Route("talent.create", $user_profile->id)}}">
           Create
           Profile
         </a>
         @endif
+        {{-- <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" 
+        href="{{Route("profile.edit", Auth::user()->id)}}">
+        Profile
+      </a> --}}
       <a 
         class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" 
         href="{{Route("job_search")}}">

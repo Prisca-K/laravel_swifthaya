@@ -54,13 +54,13 @@ class RegisteredUserController extends Controller
     Auth::login($user);
 
     if ($user->user_type === "company") {
-      return redirect(route('company.dashboard'));
+      return redirect(route('company.dashboard', $user->id));
     } elseif ($user->user_type === "individual") {
-      return redirect(route('individual.dashboard'));
+      return redirect(route('individual.dashboard', $user->id));
     } elseif ($user->user_type === "talent") {
-      return redirect(route('talent.dashboard'));
+      return redirect(route('talent.dashboard', $user->id));
     } elseif ($user->user_type === "admin") {
-      return redirect(route('admin.dashboard'));
-    } else return redirect(route('dashboard'));
+      return redirect(route('admin.dashboard', $user->id));
+    } else return redirect(route('dashboard', $user->id));
   }
 }

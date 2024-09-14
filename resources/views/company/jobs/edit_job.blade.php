@@ -3,7 +3,7 @@
   <div class="min-h-screen bg-gray-100 p-6">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-3xl font-semibold">Edit Job</h1>
-      <a href="{{ route('job.show', $job->id) }}"
+      <a href="{{ route('admin.jobs') }}"
         class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Back</a>
     </div>
 
@@ -97,7 +97,7 @@
           <input type="text" name="required_skills"
             id="required_skills"
             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            value="{{implode(",", json_decode($job->required_skills))}}">
+            value="{{ $job->required_skills }}">
         </div>
 
         {{-- description --}}

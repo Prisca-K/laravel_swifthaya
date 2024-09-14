@@ -29,7 +29,6 @@ class SwifthayajobController extends Controller
     $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
     $hasCompanyProfile = Company_profile::where("user_profile_id", $user_profile->id)->exists();
     // dd($hasCompanyProfile);
-    // check if admin has company profile
     if ($hasCompanyProfile) {
       $users = User::where("user_type", "company")->get();
       return view('admin.jobs.create', compact('users'));
@@ -39,18 +38,19 @@ class SwifthayajobController extends Controller
 
   public function store(StoreSwifthayajobRequest $request)
   {
-
-    $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
-    $user = Auth::user();
-
-    $skillsArray = explode(',', request()->required_skills);
     $validated = $request->validated();
-    $validated["company_id"] = $user->id;
-    $validated["required_skills"] = json_encode($skillsArray);
+    $validated["company_id"] = Auth::user()->id;
+    $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
+    $hasCompanyProfile = Company_profile::where("user_profile_id", $user_profile->id)->exists();
+    // dd($hasCompanyProfile);
+    if ($hasCompanyProfile) {
+      Swifthayajob::create($validated);
+      return redirect()->route('admin.jobs')->with('success', 'Job created successfully.');
+    }
+    return redirect()->route("admin.companies.create", $user_profile->id);
 
-    Swifthayajob::create($validated);
-    return redirect()->route("admin.jobs", $user_profile->id);
 
+    // I need someone good in mobile designs to join my team, we are on a serious project and we would pay based on your expertise
   }
 
   public function edit(Swifthayajob $job)
@@ -62,6 +62,7 @@ class SwifthayajobController extends Controller
   public function update(UpdateSwifthayajobRequest $request, Swifthayajob $job)
   {
     $validated = $request->validated();
+    $validated["company_id"] = $job->user->id;
     $job->update($validated);
     return redirect()->route('admin.jobs')->with('success', 'Job updated successfully.');
   }

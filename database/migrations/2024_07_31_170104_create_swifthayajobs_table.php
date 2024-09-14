@@ -19,7 +19,7 @@ return new class extends Migration
           $table->string('required_skills')->nullable();
           $table->string('location')->nullable();
           $table->string('salary_range')->nullable();
-          $table->enum('job_type', ['full-time', 'part-time', 'contract']);
+          $table->enum('job_type', ['Full-time', 'Part-time', 'Contract']);
           $table->timestamps();
           $table->timestamp('posted_at')->nullable();
           $table->timestamp('deadline_date')->nullable();

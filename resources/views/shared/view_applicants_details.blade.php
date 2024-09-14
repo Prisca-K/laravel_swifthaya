@@ -69,7 +69,7 @@
           <p class="mt-3 text-sm font-medium text-gray-900">
             <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                  {{ $application->status == 'accepted' ? 'bg-green-100 text-green-800' : ($application->status == 'rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                  {{ $application->status == 'Accepted' ? 'bg-green-100 text-green-800' : ($application->status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
               {{ $application->status }}
             </span>
           </p>
@@ -80,11 +80,11 @@
           @if ($application->status === "Pending" || "Accepted")
           <a href="{{ route('conversations.index') }}"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            {{($application->status === "accepted") ?
+            {{($application->status === "Accepted") ?
             "Interview" : "Message"}}
           </a>
           @endif
-          @if ($application->status !== "accepted")
+          @if ($application->status !== "Accepted")
           <form
             action="{{ route('applicants.accept', $application->id) }}"
             method="POST">

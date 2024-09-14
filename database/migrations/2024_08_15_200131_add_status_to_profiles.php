@@ -12,21 +12,21 @@ return new class extends Migration
   public function up()
   {
     Schema::table('users', function (Blueprint $table) {
-      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->after('created_at');
+      $table->string('status')->default('pending');
     });
 
     Schema::table('talent_profiles', function (Blueprint $table) {
-      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->after('created_at');
+      $table->string('status')->default('pending');
     });
 
     Schema::table('company_profiles', function (Blueprint $table) {
-      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->after('created_at');
+      $table->string('status')->default('pending');
     });
     Schema::table('swifthayajobs', function (Blueprint $table) {
-      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->after('created_at');
+      $table->string('status')->default('pending');
     });
     Schema::table('projects', function (Blueprint $table) {
-      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->after('created_at');
+      $table->string('status')->default('pending');
     });
   }
 

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Message;
-use App\Models\Payment;
 use App\Models\Project;
 use App\Models\Swifthayajob;
 use App\Models\User;
@@ -13,7 +12,7 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-  public function index()
+  public function index(User $user)
   {
 
     $totalUsers = User::count();
@@ -21,7 +20,7 @@ class AdminController extends Controller
     $totalProjects = Project::count();
     $totalApplications = Application::count();
     // $totalRevenue = Application::where('status', 'Accepted')->sum('amount'); // Assuming you have an amount column
-    $paymentsProcessed = Payment::all()->sum('amount'); // This is just a placeholder value. You'd fetch this from your payments table.
+    $paymentsProcessed = 34567; // This is just a placeholder value. You'd fetch this from your payments table.
 
     $recentJobs = Swifthayajob::with(['user', 'application'])->latest()->take(5)->get();
     $recentProjects = Project::with(['user', 'application'])->latest()->take(5)->get();

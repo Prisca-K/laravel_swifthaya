@@ -1,4 +1,82 @@
 <x-app-layout>
+  {{-- <div class="flex h-screen bg-gray-100">
+    <!-- Conversations List -->
+    <div class="w-1/4 bg-white border-r overflow-y-auto">
+      <div class="p-4">
+        <h2 class="text-xl font-semibold mb-4">Conversations
+        </h2>
+        <ul class="space-y-4">
+          <!-- Single Conversation -->
+          <li
+            class="flex items-center space-x-3 p-2 hover:bg-gray-200 cursor-pointer">
+            <img src="/path/to/profile.jpg" alt="Profile"
+              class="w-12 h-12 rounded-full">
+            <div>
+              <h3 class="text-md font-semibold">John Doe
+              </h3>
+              <p class="text-sm text-gray-600 truncate">Last
+                message preview goes here...</p>
+            </div>
+          </li>
+          <!-- Repeat for each conversation -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- Chat Window -->
+    <div class="flex-1 flex flex-col bg-white">
+      <!-- Chat Header -->
+      <div class="px-6 py-4 border-b">
+        <div class="flex items-center space-x-4">
+          <img src="/path/to/active-profile.jpg"
+            alt="Profile" class="w-12 h-12 rounded-full">
+          <div>
+            <h3 class="text-lg font-semibold">John Doe</h3>
+            <p class="text-sm text-gray-500">Online</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="flex-1 p-6 overflow-y-auto space-y-4">
+        <!-- Sender Message -->
+        <div class="flex items-start space-x-3">
+          <img src="/path/to/sender-profile.jpg"
+            alt="Profile" class="w-10 h-10 rounded-full">
+          <div class="bg-blue-100 p-3 rounded-lg">
+            <p class="text-sm text-gray-800">Hey, how are
+              you doing?</p>
+            <span class="text-xs text-gray-500">10:30
+              AM</span>
+          </div>
+        </div>
+        <!-- Receiver Message -->
+        <div class="flex items-start space-x-3 justify-end">
+          <div class="bg-gray-100 p-3 rounded-lg">
+            <p class="text-sm text-gray-800">I’m good,
+              thanks! How about you?</p>
+            <span class="text-xs text-gray-500">10:32
+              AM</span>
+          </div>
+          <img src="/path/to/receiver-profile.jpg"
+            alt="Profile" class="w-10 h-10 rounded-full">
+        </div>
+        <!-- Repeat for each message -->
+      </div>
+
+      <!-- Message Input -->
+      <div class="border-t px-4 py-4 bg-gray-50">
+        <form class="flex items-center space-x-4">
+          <input type="text"
+            class="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Type a message...">
+          <button type="submit"
+            class="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">Send</button>
+        </form>
+      </div>
+    </div>
+  </div> --}}
+
   <div class="flex h-screen">
     <!-- Conversations List -->
     <div class="w-1/3 border-r border-gray-200 bg-gray-50">
@@ -11,7 +89,7 @@
         <li>
           @if ($conversation->recipient->id ===
           Auth::user()->id)
-          <a href="{{ route('messages.show',[$conversation->user->id, $conversation->user->userprofile->first_name . $conversation->user->userprofile->last_name]) }}"
+          <a href="{{ route('messages.show',[$conversation->id,$conversation->user->id]) }}"
             class="block p-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200">
             <div class="flex items-center">
               <img
@@ -29,7 +107,7 @@
             </div>
           </a>
           @else
-          <a href="{{ route('messages.show',[$conversation->recipient->id, $conversation->recipient->userprofile->first_name . $conversation->recipient->userprofile->last_name]) }}"
+          <a href="{{ route('messages.show',[$conversation->id,$conversation->recipient->id]) }}"
             class="block p-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200">
             <div class="flex items-center">
               <img
@@ -86,7 +164,7 @@
       </div>
       @else
       <p class="text-center mt-3">
-        @if (!$conversations)
+        @if (!$conversation)
         Candidates have not applied to any job/project
         @endif
       </p>
@@ -222,7 +300,25 @@
       {{-- input --}}
 
     @endif
-
+    <!-- Input Message -->
+    {{-- <div class="border-t border-gray-200 p-4">
+      <form
+        action="{{ route('messages.store',$recipient->id) }}"
+        method="POST">
+        @csrf
+        <div class="flex items-center">
+          <input type="hidden" name="conversation_id"
+            value="{{$activeConversation->id}}">
+          <input type="text" name="message"
+            placeholder="Type a message..."
+            class="flex-grow bg-gray-100 rounded-full p-3 mr-3 focus:outline-none">
+          <button type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors duration-200">
+            Send
+          </button>
+        </div>
+      </form>
+    </div> --}}
 
     @else
     <div
@@ -235,9 +331,101 @@
 
     {{-- new conversation --}}
 
-  </div>
-  </div>
 
+  </div>
+  </div>
+  {{-- <div class="flex h-screen">
+    <!-- Conversations List -->
+    <div class="w-1/3 border-r border-gray-200 bg-gray-50">
+      <div class="p-4">
+        <h2 class="text-xl font-semibold text-gray-800">
+          Conversations</h2>
+      </div>
+      <ul>
+        <li>
+          <a href="#"
+            class="block p-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200">
+            <div class="flex items-center">
+              <img src="https://via.placeholder.com/40"
+                alt="John Doe"
+                class="w-10 h-10 rounded-full mr-3">
+              <div>
+                <p class="text-gray-900 font-semibold">John
+                  Doe</p>
+                <p class="text-sm text-gray-500">Last
+                  message from John...</p>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#"
+            class="block p-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200">
+            <div class="flex items-center">
+              <img src="https://via.placeholder.com/40"
+                alt="Jane Smith"
+                class="w-10 h-10 rounded-full mr-3">
+              <div>
+                <p class="text-gray-900 font-semibold">Jane
+                  Smith</p>
+                <p class="text-sm text-gray-500">Last
+                  message from Jane...</p>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Chat Window -->
+    <div class="w-2/3 flex flex-col">
+      <!-- Assuming John Doe's conversation is active -->
+      <div class="flex-grow p-6 bg-white overflow-auto">
+        <div class="flex items-center mb-4">
+          <img src="https://via.placeholder.com/40"
+            alt="John Doe"
+            class="w-10 h-10 rounded-full mr-3">
+          <h3 class="text-xl font-semibold text-gray-800">
+            John Doe</h3>
+        </div>
+        <div id="chat-window" class="space-y-4">
+          <div class="flex justify-end">
+            <div
+              class="bg-blue-500 text-white rounded-lg p-3 max-w-xs">
+              <p>Hello John, how are you?</p>
+              <span class="text-xs text-gray-300">2 hours
+                ago</span>
+            </div>
+          </div>
+          <div class="flex">
+            <div
+              class="bg-gray-200 text-gray-900 rounded-lg p-3 max-w-xs">
+              <p>Hi! I'm doing great, thanks. How about you?
+              </p>
+              <span class="text-xs text-gray-500">1 hour
+                ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Message -->
+      <div class="border-t border-gray-200 p-4">
+        <form action="#" method="POST">
+          @csrf
+          <div class="flex items-center">
+            <input type="text" name="message"
+              placeholder="Type a message..."
+              class="flex-grow bg-gray-100 rounded-full p-3 mr-3 focus:outline-none">
+            <button type="submit"
+              class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors duration-200">
+              Send
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> --}}
 
 
 
