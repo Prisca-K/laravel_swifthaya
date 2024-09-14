@@ -5,7 +5,7 @@
         class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         {{ __('Company Dashboard') }}
       </h2>
-      <a href="{{ route("jobs", [$job->company_id]) }}"
+      <a href="{{ route("jobs") }}"
         class="bg-green-800 text-white px-4 py-2 rounded hover:bg-green-600">All Jobs</a>
     </div>
   </x-slot>
@@ -18,7 +18,10 @@
       <div>
         <p><strong>Name:</strong> {{ $job->title }}
 
-        <p><strong>Skills:</strong> {{ $job->required_skills }}
+        <p><strong>Skills:</strong> 
+          @foreach (json_decode($job->required_skills) as $skill)
+            <li>{{$skill}}</li>
+            @endforeach
         </p>
         <p><strong>Experience:</strong> 
         {{(intval( $job->experience) > 1) ?  $job->experience . " " . "years" : $job->experience . " " . "year"}}
@@ -33,7 +36,7 @@
           ucfirst($job->description) }}</p>
       </div>
       <div class="mt-4">
-        <a href="{{ route('company.dashboard', Auth::user()->id) }}"
+        <a href="{{ route('company.dashboard') }}"
           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Back</a>
         <a href="{{ route('job.edit', $job->id) }}"
           class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit</a>

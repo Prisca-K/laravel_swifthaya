@@ -52,15 +52,24 @@
                 <option value="php" {{
                   request('required_skills')=='php'
                   ? 'selected' : '' }}>Php</option>
-                <option value="figma" {{
-                  request('required_skills')=='figma'
-                  ? 'selected' : '' }}>Figma</option>
-                <option value="react" {{
-                  request('required_skills')=='react'
-                  ? 'selected' : '' }}>React</option>
+                <option value="bootstrap" {{
+                  request('required_skills')=='bootstrap'
+                  ? 'selected' : '' }}>Bootstrap</option>
+                <option value="mongoDB" {{
+                  request('required_skills')=='mongoDB'
+                  ? 'selected' : '' }}>MongoDB</option>
                 <option value="html" {{
                   request('required_skills')=='html'
                   ? 'selected' : '' }}>Html</option>
+                <option value="python" {{
+                  request('required_skills')=='python'
+                  ? 'selected' : '' }}>Python</option>
+                <option value="javascript" {{
+                  request('required_skills')=='javascript'
+                  ? 'selected' : '' }}>Javascript</option>
+                <option value="seo" {{
+                  request('required_skills')=='seo'
+                  ? 'selected' : '' }}>Seo</option>
               </select>
             </div>
 
@@ -95,7 +104,8 @@
       <div class="w-full md:w-3/4">
         <div class="bg-white shadow-lg rounded-lg p-6">
           <h2 class="text-xl font-semibold mb-4">Project
-            Results</h2>
+            Results
+          </h2>
           <div
             class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @forelse($projects as $project)
@@ -107,11 +117,15 @@
               <p class="text-gray-700">
                 {{ "$" . $project->budget }}</p>
               <p class="text-gray-700">
-                {{$project->duration . " " . "months" }}</p>
+                {{(intval($project->duration) > 1) ? $project->duration . " " . "months" : $project->duration . " " . "month" }}</p>
               <div class="mt-2 flex flex-wrap">
+                @foreach (json_decode($project->required_skills) as $item)
                 <span
                   class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium mr-2 mb-2">
-                  {{$project->required_skills}}</span>
+
+                  {{$item}}
+                </span>
+                @endforeach
               </div>
             </a>
             @empty

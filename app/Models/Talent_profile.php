@@ -10,7 +10,11 @@ class Talent_profile extends Model
   use HasFactory;
 
   protected $fillable = [
-    'user_profile_id', 'skills', 'experience', 'education', 'portfolio',
+    'user_profile_id',
+    'skills',
+    'experience',
+    'education',
+    'portfolio',
   ];
 
   protected $casts = [
@@ -28,5 +32,4 @@ class Talent_profile extends Model
   {
     return $this->belongsTo(User::class);
   }
-
 }

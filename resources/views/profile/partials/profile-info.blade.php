@@ -12,11 +12,28 @@
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
     </form>
+    @if (session('status') === 'profile-updated')
+    <p
+      x-data="{ show: true }"
+      x-show="show"
+      x-transition
+      x-init="setTimeout(() => show = false, 2000)"
+      class="text-sm text-white dark:text-gray-400 bg-green-500 p-4 rounded border border-green-800">
+        {{ __('Saved.') }}
+     </p>
+    @endif
+    @if(session('error'))
+    <div
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative m-6"
+      role="alert">
+      <strong class="font-bold">{{ session('error')
+        }}</strong>
+    </div>
+    @endif
 
-    <form method="post" action="{{ route('user.update', $user->userprofile->id) }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('user.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
-
         <div>
             <x-input-label for="first_name" :value="__('First Name')" />
             <x-text-input id="first_name" name="first_name" type="text" class="mt-1 block w-full" :value="old('first_name', $user->userprofile->first_name)" required autofocus autocomplete="first_name" />
@@ -73,18 +90,7 @@
           <x-text-input id="website" name="website" type="url" class="mt-1 block w-full" :value="old('website',  $user->userprofile->website)" autofocus autocomplete="website" />
           <x-input-error class="mt-2" :messages="$errors->get('website')" />
       </div>
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-            @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ __('Saved.') }}</p>
-            @endif
-        </div>
+      <button class="bg-blue-900 text-white px-8 py-2 rounded mt-4" type="submit">Save</button>
+           
     </form>
 </section>

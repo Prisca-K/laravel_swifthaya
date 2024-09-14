@@ -52,7 +52,10 @@
             Skills</h2>
           <ul
             class="list-disc list-inside text-gray-700 space-y-2">
-            <li>{{  $talent_profile->skills }}</li>
+            @foreach (json_decode($talent_profile->skills) as $skill)
+            <li>{{  $skill }}</li>
+                
+            @endforeach
           </ul>
         </div>
 
@@ -60,31 +63,55 @@
         <div class="bg-white shadow rounded-lg p-8">
           <h2 class="text-2xl font-bold text-gray-900 mb-4">
             Experience</h2>
-          <ul
-            class="list-disc list-inside text-gray-700 space-y-2">
-            <li>{{ $talent_profile->experience}} years</li>
-          </ul>
+            <p class="text-gray-700">
+              <?php $experience = json_decode($talent_profile->experience, true)?>
+              @foreach ($experience as $i => $edu)
+                  
+              <div class="border p-4 mt-3 rounded">
+                <h3>Experience {{$i + 1}}</h3>
+              <p><strong>Company:</strong> {{ucfirst( $edu['company'])}} </p>
+              <p><strong>Role:</strong> {{ $edu['role'] }}</p> 
+              <p><strong>Duration:</strong> {{ $edu['duration'] }}</p>
+              </div>
+              @endforeach
+            </p>
         </div>
 
         <!-- Education Section -->
         <div class="bg-white shadow rounded-lg p-8">
           <h2 class="text-2xl font-bold text-gray-900 mb-4">
             Education</h2>
-          <ul
-            class="list-disc list-inside text-gray-700 space-y-2">
-            <li>{{  $talent_profile->education }}</li>
-          </ul>
+          {{-- education --}}
+          <p class="text-gray-700">
+            <?php $education = json_decode($talent_profile->education, true)?>
+            @foreach ($education as $i => $edu)
+                
+            <div class="border p-4 mt-3 rounded">
+              <h3>Education {{$i + 1}}</h3>
+            <p><strong>Degree:</strong> {{ucfirst( $edu['degree'])}} </p>
+            <p><strong>Institution:</strong> {{ $edu['institution'] }}</p> 
+            <p><strong>Year:</strong> {{ $edu['year'] }}</p>
+            </div>
+            @endforeach
+          </p>
         </div>
 
         <!-- Portfolio Section -->
         <div class="bg-white shadow rounded-lg p-8">
           <h2 class="text-2xl font-bold text-gray-900 mb-4">
             Portfolio</h2>
-          <ul
-            class="list-disc list-inside text-gray-700 space-y-2">
-            <li><a href="{{$talent_profile->portfolio }}" target="_blank"
-                class="text-blue-600 hover:underline">{{$talent_profile->portfolio  }}</a></li>
-          </ul>
+            <p class="text-gray-700">
+              <?php $portfolio = json_decode($talent_profile->portfolio, true)?>
+              @foreach ($portfolio as $i => $port)
+                  
+              <div class="border p-4 mt-3 rounded">
+                <h3>Portfolio {{$i + 1}}</h3>
+              <p><strong>Title:</strong> {{ucfirst( $port['title'])}} </p>
+              <p><strong>Description:</strong> {{ $port['description'] }}</p> 
+              <p><strong>Url:</strong> <a class="text-blue-400" href="{{ $port['url'] }}">{{ $port['url'] }}</a></p>
+              </div>
+              @endforeach
+            </p>
         </div>
       </div>
     </div>

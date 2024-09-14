@@ -95,7 +95,7 @@
             value="{{ old('email', $user->email) }}">
         </div>
 
-        <div class="mb-4">
+        {{-- <div class="mb-4">
           <label for="user_type"
             class="block text-sm font-medium text-gray-700">User
             Type</label>
@@ -113,7 +113,7 @@
               'company' ? 'selected' : '' }}>Company
             </option>
           </select>
-        </div>
+        </div> --}}
 
         <div class="flex justify-end">
           <button type="submit"

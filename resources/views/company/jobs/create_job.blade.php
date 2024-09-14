@@ -3,7 +3,7 @@
   <div class="min-h-screen bg-gray-100 p-10">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-3xl font-semibold">Add New Job</h1>
-      <a href="{{ route('company.dashboard', Auth::user()->id) }}"
+      <a href="{{ route('company.dashboard') }}"
         class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Back</a>
     </div>
 

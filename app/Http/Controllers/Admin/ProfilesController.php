@@ -24,11 +24,29 @@ class ProfilesController extends Controller
   {
     return view('admin.talents.create', compact("user_profile"));
   }
-  public function storeTalent(StoreTalent_profileRequest $request, User_profile $user_profile)
+  public function storeTalent(User_profile $user_profile)
   {
-    $validated =  $request->validated();
+    // $validated =  $request->validated();
     $validated["user_profile_id"] = $user_profile->id;
-    Talent_profile::create($validated);
+    // Talent_profile::create($validated);
+
+
+    $skillsArray = explode(',', request()->skills);
+    $experienceArray = request()->experience;
+    $educationArray = request()->education;
+    $portfolioArray = request()->portfolio;
+    // dd(json_encode($experienceArray), json_encode($skillsArray));
+    // dd(json_encode($experienceArray));
+
+    $talent_profile = Talent_profile::create(
+      [
+        'user_profile_id' => $user_profile->id,
+        'skills' => json_encode($skillsArray),
+        'experience' => json_encode($experienceArray),
+        'education' => json_encode($educationArray),
+        'portfolio' => json_encode($portfolioArray)
+      ]
+    );
     return redirect()->route('admin.talents')->with('success', 'Talent profile created successfully.');
   }
 
@@ -47,11 +65,26 @@ class ProfilesController extends Controller
   }
 
   // Update Talent Profile
-  public function updateTalent(UpdateTalent_profileRequest $request, Talent_profile $talent)
+  public function updateTalent( Talent_profile $talent)
   {
-    $validated =  $request->validated();
+    // $validated =  $request->validated();
     $profile = Talent_profile::findOrFail($talent->id);
-    $profile->update($validated);
+    $skillsArray = explode(',', request()->skills);
+    $experienceArray = request()->experience;
+    $educationArray = request()->education;
+    $portfolioArray = request()->portfolio;
+    // dd(json_encode($experienceArray), json_encode($skillsArray));
+    // dd(json_encode($educationArray));
+
+
+    $profile->update(
+      [
+        'skills' => json_encode($skillsArray),
+        'experience' => json_encode($experienceArray),
+        'education' => json_encode($educationArray),
+        'portfolio' => json_encode($portfolioArray)
+      ]
+    );
     return redirect()->route('admin.talents')->with('success', 'Talent profile updated successfully.');
   }
 
@@ -98,7 +131,7 @@ class ProfilesController extends Controller
     $hasProfile = Company_profile::where("user_profile_id", $user_profile->id)->exists();
     $company = Company_profile::where("user_profile_id", $user_profile->id)->first();
     if ($hasProfile) {
-     return redirect()->route("admin.companies.view", $company->id);
+      return redirect()->route("admin.companies.view", $company->id);
     }
     return view('admin.companies.create', compact("user_profile"));
   }

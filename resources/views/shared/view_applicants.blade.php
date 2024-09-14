@@ -64,7 +64,7 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <span
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                  {{ $application->status == 'Accepted' ? 'bg-green-100 text-green-800' : ($application->status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                  {{ $application->status == 'accepted' ? 'bg-green-100 text-green-800' : ($application->status == 'rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
                 {{ $application->status }}
               </span>
             </td>
@@ -75,7 +75,7 @@
                 class="px-2 border-2 rounded-full bg-indigo-100 text-indigo-600 hover:text-indigo-900 mr-1">
                 View
               </a>
-              @if ($application->status === "Accepted")
+              @if ($application->status === "accepted")
               <a href="{{ route('conversations.index') }}"
                 class="px-2 border-2 rounded-full bg-green-100 text-green-600 hover:text-green-900 mr-1">
                 Interview
