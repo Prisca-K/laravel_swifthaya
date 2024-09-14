@@ -5,10 +5,10 @@
       </h1>
       @if (Auth::user()->user_type === "company")
           
-      <a href="{{ route('company.dashboard') }}"
+      <a href="{{ route('company.dashboard', Auth::user()->id) }}"
         class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Back</a>
       @else     
-      <a href="{{ route('individual.dashboard') }}"
+      <a href="{{ route('individual.dashboard', Auth::user()->id) }}"
       class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Back</a>
       @endif
     </div>

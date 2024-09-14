@@ -72,6 +72,7 @@ class UserController extends Controller
 
     // updating user profile
     $profile->update([
+      'user_id' => $user->id,
       'first_name' => ucfirst($validated["first_name"]),
       'last_name' => ucfirst($validated["last_name"]),
       // 'profile_picture' => $validated["profile_picture"],
@@ -92,10 +93,9 @@ class UserController extends Controller
   // Approve User
   public function approveUser(User $user)
   {
-    // dd($user);
     $user = User::where("id", $user->id);
-    // $status = $user->status = 'approved';
-    $user->update(["status" => "approved"]);
+    $status = $user->status = 'approved';
+    $user->update(["status" => $status]);
 
     return redirect()->route('admin.users')->with('success', 'User has been approved successfully.');
   }
@@ -104,8 +104,8 @@ class UserController extends Controller
   public function rejectUser(User $user)
   {
     $user = User::where("id", $user->id);
-    // $status = $user->status = 'rejected';
-    $user->update(["status" => "rejected"]);
+    $status = $user->status = 'rejected';
+    $user->update(["status" => $status]);
 
     return redirect()->route('admin.users')->with('error', 'User has been rejected.');
   }

@@ -23,9 +23,9 @@ class StoreTalent_profileRequest extends FormRequest
   {
     return [
       'skills' => 'required|string',
-      'experience' => 'required|array',
-      'education' => 'required|array',
-      'portfolio' => 'nullable|array',
+      'experience' => 'required|string',
+      'education' => 'required|string',
+      'portfolio' => 'nullable|string',
     ];
   }
 }

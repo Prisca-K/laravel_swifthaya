@@ -5,7 +5,7 @@
         class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         {{ __('Individual Dashboard') }}
       </h2>
-      <a href="{{Route("profile.edit")}}">
+      <a href="{{Route("profile.edit", Auth::user()->id)}}">
         <img class="w-12 h-12 object-cover rounded-full" src="{{Auth::user()->userprofile->getImgUrl()}}" alt="">
       </a>
     </div>
@@ -16,20 +16,27 @@
       <div
         class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
         <div
-          class="p-6 text-gray-900 dark:text-gray-100 flex justify-evenly items-center">
+          class="p-6 text-gray-900 dark:text-gray-100 flex justify-between items-center">
           <p>{{ __("You're logged in!") }}</p>
-          <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            href="{{Route("project.create")}}">
-            Post Project
+          <a class="flex justify-center items-center"
+            href="{{Route("project.create",$user->id)}}"
+            style="border: 2px solid gray; padding:5px;
+            height:3rem; border-radius:5px;">Post Project
           </a>
-
+          {{-- <a class="flex justify-center items-center"
+            href="{{Route("profile.edit", $user->id)}}"
+            style="border: 2px solid gray; padding:5px;
+            height:3rem; border-radius:5px; margin-right:
+            2rem">Profile
+          </a> --}}
           <a href="{{ Route("conversations.index") }}"
             class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Messages
           </a>
-          <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            href="{{Route("talent_search")}}">
-            Find Talents
+          <a class="flex justify-center items-center"
+            href="{{Route("find_talents")}}" style="border: 2px solid gray; padding:5px;
+          height:3rem; border-radius:5px; margin-right:
+          2rem">Find Talents
           </a>
         </div>
 
@@ -59,9 +66,9 @@
           <p>Deadline: {{$project->deadline_date}}</p>
         </div>
 
-        <a class="flex justify-center items-center px-20"
+        <a class=" w-3/4 flex justify-center items-center"
           href="{{Route("project.show", $project->id)}}"
-          style="border: 2px solid gray;
+          style="border: 2px solid gray; padding:5px;
           height:3rem; border-radius:5px;">View Project
         </a>
       </div>

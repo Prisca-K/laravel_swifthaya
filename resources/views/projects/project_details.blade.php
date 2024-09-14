@@ -24,20 +24,19 @@
           @endif
         </div>
         <div class="ml-6">
-          <h1 class="text-3xl font-bold text-gray-900">
-           {{ ($user_profile->companyprofile) ? $user_profile->companyprofile->company_name :  $user_profile->first_name . " " . $user_profile->last_name}}
-          </h1>
+          <h1 class="text-3xl font-bold text-gray-900">{{
+           $user_profile->companyprofile->company_name}}</h1>
 
           <p class="text-xl text-gray-600 mt-2">
             {{ ucfirst($user_profile->user->user_type) }}
           </p>
           <p class="text-gray-500 mt-4">Location: {{
-            ucfirst($user_profile->location) ?? 'Not
+            $user_profile->location ?? 'Not
             specified' }}
           </p>
         </div>
         <div class="ml-auto">
-          <a href="{{Route(".project.apply",[$project->id,  Auth::user()->id])}}"
+          <a href="{{Route("talent.project.apply",[$project->id,  Auth::user()->id])}}"
             class="bg-blue-600 text-white px-6 py-2 rounded-lg text-lg hover:bg-blue-500 transition">
             Apply
           </a>
@@ -64,9 +63,7 @@
             Required Skills</h2>
           <ul
             class="list-disc list-inside text-gray-700 space-y-2">
-            @foreach (json_decode($project->required_skills) as $skill)
-            <li>{{$skill}}</li>
-            @endforeach          
+            <li>{{ $project->required_skills }}</li>
           </ul>
         </div>
 

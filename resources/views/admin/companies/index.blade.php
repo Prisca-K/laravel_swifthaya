@@ -38,7 +38,7 @@
               <td class="border px-4 py-2">
                 {{$profile->company_name}}</td>
               <td class="border px-4 py-2">{{
-                ucfirst($profile->industry) }}</td>
+                $profile->industry }}</td>
               <td class="border px-4 py-2">
                 @if($profile->status == 'approved')
                 <span class="text-green-500">Approved</span>

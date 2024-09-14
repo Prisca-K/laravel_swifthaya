@@ -21,7 +21,7 @@
       @endif
 
       <!-- Job Application Form -->
-      <form action="{{ route('job.store_application', [$job->id, Auth::user()->id]) }}"
+      <form action="{{ route('talent.job.apply.store', [$job->id, Auth::user()->id]) }}"
         method="POST" enctype="multipart/form-data"
         class="mt-8">
         @csrf
@@ -66,6 +66,15 @@
           @enderror
           <p class="mt-2 text-sm text-gray-500">PDF, DOC,
             DOCX, or ZIP (Max size: 5MB)</p>
+        </div>
+        {{-- applied at --}}
+        <div class="form-group mb-4">
+          <label for="applied_at">Applied at</label>
+          <input type="date" class="form-control"
+            id="applied_at" name="applied_at">
+          @error('applied_at')
+          <p>{{ $message }}</p>
+          @enderror
         </div>
 
         <!-- Submit Button -->

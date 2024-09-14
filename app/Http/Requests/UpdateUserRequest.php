@@ -25,8 +25,7 @@ class UpdateUserRequest extends FormRequest
     return [
       'first_name' => ['required', 'string', 'min:3', 'max:20'],
       'last_name' => ['required', 'string', 'min:3', 'max:20'],
-      // 'user_type' => ['required', 'string', 'min:3', 'max:20'],
-      'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+      'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
       'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
       'bio' => 'nullable|string',
       'location' => 'nullable|string|max:255',

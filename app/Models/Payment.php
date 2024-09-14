@@ -7,22 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-  use HasFactory;
-  protected $fillable = [
-    "user_id",
-    "swifthayajob_id",
-    "project_id",
-    "payer_type",
-    "net_amount",
-    "amount",
-    "platform_fee",
-    "currency",
-    "payment_status",
-    "payment_date",
-    "payment_reference",
-  ];
-  public function user()
-  {
-    return $this->belongsTo(User::class, 'user_id');
-  }
+    use HasFactory;
+    protected $fillable = [
+      "user_id",
+      "swifthayajob_id",
+      "project_id",
+      "payer_type",
+      "net_amount",
+      "amount",
+      "platform_fee",
+      "currency",
+      "payment_status",
+      "payment_date",
+      "payment_reference",
+    ];
 }

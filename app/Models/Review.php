@@ -11,8 +11,10 @@ class Review extends Model
   protected $fillable = [
     'reviewer_id',
     'reviewee_id',
+    // 'job_id',
+    // 'project_id',
     'rating',
-    'comment'
+    'review'
   ];
   public function reviewer()
   {
@@ -24,13 +26,13 @@ class Review extends Model
     return $this->belongsTo(User::class, 'reviewee_id');
   }
 
-  // public function swifthayajob()
-  // {
-  //   return $this->belongsTo(Swifthayajob::class);
-  // }
+  public function swifthayajob()
+  {
+    return $this->belongsTo(Swifthayajob::class);
+  }
 
-  // public function project()
-  // {
-  //   return $this->belongsTo(Project::class);
-  // }
+  public function project()
+  {
+    return $this->belongsTo(Project::class);
+  }
 }

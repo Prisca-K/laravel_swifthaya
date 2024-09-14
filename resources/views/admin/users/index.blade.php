@@ -43,7 +43,7 @@
             </td>
 
             <td class="border px-4 py-2">
-              @if($user->status === 'approved')
+              @if($user->status == 'approved')
               <span class="text-green-500">Approved</span>
               @elseif($user->status == 'rejected')
               <span class="text-red-500">Rejected</span>
@@ -58,12 +58,6 @@
                 class="text-green-600 hover:text-green-900 mr-2">Approve</a>
               <a href="{{ route('admin.users.reject', $user->id) }}"
                 class="text-red-600 hover:text-red-900 mr-8">Reject</a>
-              @elseif($user->status == 'rejected')
-              <a href="{{ route('admin.users.approve', $user->id) }}"
-                class="text-green-600 hover:text-green-900 mr-2">Approve</a>
-              @elseif($user->status == 'approved')
-              <a href="{{ route('admin.users.reject', $user->id) }}"
-                class="text-red-600 hover:text-red-900 mr-2">Reject</a>
               @endif
               <a href="{{ route('admin.users.edit', $user->id) }}"
                 class="text-blue-600 hover:text-blue-900">Edit</a>

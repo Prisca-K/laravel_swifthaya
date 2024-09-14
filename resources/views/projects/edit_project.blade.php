@@ -81,7 +81,7 @@
           <input type="text" name="required_skills"
             id="required_skills"
             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            value="{{implode(",", json_decode($project->required_skills))}}">
+            value="{{ $project->required_skills }}">
         </div>
 
         {{-- description --}}

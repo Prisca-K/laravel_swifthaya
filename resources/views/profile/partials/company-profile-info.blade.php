@@ -49,7 +49,7 @@
           id="founded_year" name="founded_year" value="{{$user->userprofile->companyprofile->founded_year}}" required
           min="1800" max="{{ date('Y') }}">
       </div>
-     <button class="bg-blue-900 text-white px-8 py-2 rounded mt-4" type="submit">Save</button>
+      <x-primary-button>{{ __('Save') }}</x-primary-button>
     </form>
   </div>
 

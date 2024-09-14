@@ -24,7 +24,8 @@
           @endif
         </div>
         <div class="ml-6">
-          <h1 class="text-3xl font-bold text-gray-900"></h1>
+          <h1 class="text-3xl font-bold text-gray-900">{{
+           $user_profile->companyprofile->company_name }}</h1>
           <p class="text-xl text-gray-600 mt-2">
             {{ ucfirst($user_profile->companyprofile->industry) }}
           </p>
@@ -32,12 +33,12 @@
             {{ ucfirst($user_profile->user->user_type) }}
           </p>
           <p class="text-gray-500 mt-4">Location: {{
-            ucfirst($job->location) ?? 'Not
+            $job->location ?? 'Not
             specified' }}
           </p>
         </div>
         <div class="ml-auto">
-          <a href="{{Route("job.apply",$job->id)}}"
+          <a href="{{Route("talent.job.apply",[$job->id, Auth::user()->id])}}"
             class="bg-blue-600 text-white px-6 py-2 rounded-lg text-lg hover:bg-blue-500 transition">
             Apply
           </a>
@@ -61,9 +62,10 @@
         <div class="bg-white shadow rounded-lg p-8">
           <h2 class="text-2xl font-bold text-gray-900 mb-4">
             Required Skills</h2>
-            @foreach (json_decode($job->required_skills) as $skill)
-            <li>{{$skill}}</li>
-            @endforeach
+          <ul
+            class="list-disc list-inside text-gray-700 space-y-2">
+            <li>{{ $job->required_skills }}</li>
+          </ul>
         </div>
 
         {{-- description --}}
@@ -103,9 +105,9 @@
             Website</h2>
           <ul
             class="list-disc list-inside text-gray-700 space-y-2">
-            <li><a href="{{$user_profile->website}}"
+            <li><a href="{{$user_profile->companyprofile->website}}"
                 target="_blank"
-                class="text-blue-600 hover:underline">{{$user_profile->website}}</a></li>
+                class="text-blue-600 hover:underline">{{$user_profile->companyprofile->website}}</a></li>
           </ul>
         </div>
       </div>

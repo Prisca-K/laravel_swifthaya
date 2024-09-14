@@ -22,8 +22,8 @@
           <tr>
             <th class="px-4 py-2">Job</th>
             <th class="px-4 py-2">Candidate</th>
-            <th class="px-4 py-2">Applied At</th>
             <th class="px-4 py-2">Status</th>
+            <th class="px-4 py-2">Applied At</th>
             <th class="px-4 py-2">Actions</th>
           </tr>
         </thead>
@@ -80,8 +80,8 @@
             <th class="px-4 py-2">Project</th>
             <th class="px-4 py-2">Candidate</th>
             <th class="px-4 py-2">Status</th>
-            <th class="px-4 py-2">Actions</th>
             <th class="px-4 py-2">Applied At</th>
+            <th class="px-4 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
