@@ -91,7 +91,31 @@
 
             <!-- Experience Filter -->
             <div>
-              <label for="experience"
+              <label for="salary_range"
+                class="block text-sm font-medium text-gray-700">Salary
+                Range
+              </label>
+
+              <select name="salary_range" id="salary_range"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="">Select Salary Range
+                </option>
+                <option value="10-50" {{
+                  request('salary_range')=='10-50'
+                  ? 'selected' : '' }}>$10-50</option>
+                <option value="50-100" {{
+                  request('salary_range')=='50-100'
+                  ? 'selected' : '' }}>$50-100</option>
+                <option value="100-500" {{
+                  request('salary_range')=='100-500'
+                  ? 'selected' : '' }}>$100-500 </option>
+                <option value="500_plus" {{
+                  request('salary_range')=='500_plus'
+                  ? 'selected' : '' }}>$500_plus </option>
+              </select>
+            </div>
+            <div>
+              <label for="job_type"
                 class="block text-sm font-medium text-gray-700">Job
                 Type
               </label>
@@ -118,12 +142,11 @@
         </div>
       </div>
 
-      <!-- Talent Results -->
+      <!-- job Results -->
       <div class="w-full md:w-3/4">
         <div class="bg-white shadow-lg rounded-lg p-6">
           <h2 class="text-xl font-semibold mb-4">Job
             Results</h2>
-         
           <div
             class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @forelse($jobs as $job)
@@ -141,12 +164,11 @@
               <p class="text-gray-700">
                 {{$job->job_type }}</p>
               <div class="mt-2 flex flex-wrap">
-                {{-- @foreach($talent->skills as $skill)
-                --}}
+                @foreach(json_decode($job->required_skills) as $skill)
                 <span
                   class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium mr-2 mb-2">
-                  {{$job->required_skills}}</span>
-                {{-- @endforeach --}}
+                  {{$skill}}</span>
+                @endforeach
               </div>
             </a>
             @empty

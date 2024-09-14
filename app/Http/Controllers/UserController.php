@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompany_profileRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateCompany_profileRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Models\Company_profile;
 use App\Models\User;
 use App\Models\User_profile;
 use Illuminate\Http\RedirectResponse;
@@ -15,59 +19,58 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-  public function edit(User $user)
+  public function edit()
   {
     // dd($profile->id);
     $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
+    
     Gate::authorize("update", $user_profile);
     return view('profile.edit', [
-      'user' => $user,
+      'user' => Auth::user(),
       // "profile" => $user
     ]);
   }
-
+  
   /**
    * Update the specified resource in storage.
    */
-  public function update(StoreUserRequest $request, User $user)
+  public function update(UpdateUserRequest $request)
   {
+    $user = User::findorFail(Auth::user()->id);
     $profile = User_profile::where("id", $user->userprofile->id)->first();
+    
     Gate::authorize("update", $profile);
     $validated = $request->validated();
-
+    
     $user->update([
       'email' => $validated["email"],
-      'password' => $user->passwor
+      'password' => $user->password
     ]);
-
+    
 
     // updating user profile
     $profile->update([
-      'user_id' => $user->id,
       'first_name' => ucfirst($validated["first_name"]),
       'last_name' => ucfirst($validated["last_name"]),
-      // 'profile_picture' => $validated["profile_picture"],
       'bio' => $validated["bio"],
-      'location' => $validated["location"],
+      'location' => lcfirst($validated["location"]),
       'phone_number' => $validated["phone_number"],
       'website' => $validated["website"],
     ]);
 
-    return redirect()->route('profile.edit', $profile->id)->with('status', 'profile-updated');
+
+
+
+    return redirect()->route('profile.edit')->with('status', 'profile-updated');
   }
-  public function profile_img(Request $request, User $user)
+
+
+  public function profile_img(Request $request)
   {
     // dd($user->id);
-    $profile = User_profile::where("id", $user->userprofile->id)->first();
+    $profile = User_profile::where("id", Auth::user()->userprofile->id)->first();
     Gate::authorize("update", $profile);
     $validated = $request->validate(['profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048']);
-    // updating user profile
-    // $profile->update([
-    //   'user_id' => auth()->id(),
-    //   'first_name' => ucfirst($validated["first_name"]),
-    //   'last_name' => ucfirst($validated["last_name"]),
-    //   'profile_picture' => $validated["profile_picture"],
-    // ]);
 
 
     if ($request->has("profile_picture")) {
@@ -80,7 +83,7 @@ class UserController extends Controller
 
       $profile->profile_picture = $validated;
       $profile->update(["profile_picture" => $validated]);
-      return redirect()->route('profile.edit', $user->id)->with('status', 'profile-updated');
+      return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
   }
   /**

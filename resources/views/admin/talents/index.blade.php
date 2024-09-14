@@ -37,9 +37,15 @@
             <tr>
               <td class="border px-4 py-2">{{
                 $profile->userprofile->first_name . " " .
-                $profile->userprofile->last_name }}</td>
-              <td class="border px-4 py-2">{{
-                $profile->skills }}</td>
+                $profile->userprofile->last_name }}
+              </td>
+              <td class="border ps-8 py-2">
+                <ul class="flex gap-10">
+                  @foreach (json_decode($profile->skills) as $skill)
+                  <li class="list-disc">{{ $skill }}</li>
+                  @endforeach
+                </ul>
+              </td>
               <td class="border px-4 py-2">
                 @if($profile->status == 'approved')
                 <span class="text-green-500">Approved</span>
@@ -87,7 +93,10 @@
 
                     <p
                       class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                      {{ __("Once the profile is deleted, the user's account and all of its resources and data will be permanently deleted.") }}
+                      {{ __("Once the profile is deleted,
+                      the user's account and all of its
+                      resources and data will be permanently
+                      deleted.") }}
                     </p>
 
 
@@ -98,7 +107,8 @@
                       </x-secondary-button> --}}
                       <a class="" href="{{Route("admin.talents")}}">Cancel</a>
 
-                      <x-danger-button type="submit" class="ms-3">
+                      <x-danger-button type="submit"
+                        class="ms-3">
                         {{ __('Delete Account') }}
                       </x-danger-button>
                     </div>

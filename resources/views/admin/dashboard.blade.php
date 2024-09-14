@@ -198,10 +198,10 @@
             Tracking</a>
           <a href="{{ route('admin.messages') }}"
             class="block py-2 px-4 hover:bg-blue-700">Messaging</a>
-          <a href="{{-- {{ route('admin.payments') }} --}}"
+          <a href="{{ route('admin.payments') }}"
             class="block py-2 px-4 hover:bg-blue-700">Payment
             Management</a>
-          <a href="{{ route('profile.edit', Auth::user()->id) }}"
+          <a href="{{ route('profile.edit') }}"
             class="block py-2 px-4 hover:bg-blue-700">Settings</a>
         </nav>
       </div>

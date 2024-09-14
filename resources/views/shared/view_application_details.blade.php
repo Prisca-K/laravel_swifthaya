@@ -59,9 +59,9 @@
           class="text-xl font-semibold text-gray-800 mb-4">
           Required skills</h3>
         <p class="text-gray-600 leading-relaxed">
-          {{ ($application->swifthayajob)
-          ?$application->swifthayajob->required_skills :
-          $application->project->required_skills }}
+            @foreach (($application->swifthayajob) ? json_decode($application->swifthayajob->required_skills) : json_decode($application->project->required_skills) as $skill)
+            <li>{{$skill}}</li>
+            @endforeach
         </p>
       </div>
 
@@ -72,14 +72,14 @@
         <p class="mt-3 text-sm font-medium text-gray-900">
           <span
             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                  {{ $application->status == 'Accepted' ? 'bg-green-100 text-green-800' : ($application->status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                  {{ $application->status == 'accepted' ? 'bg-green-100 text-green-800' : ($application->status == 'rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
             {{ $application->status }}
           </span>
         </p>
       </div>
 
       <!-- Actions -->
-      <a href="{{ ($application->swifthayajob) ? route('talent.job.apply.history',Auth::user()->id) : route('talent.project.apply.history', Auth::user()->id) }}"
+      <a href="{{ ($application->swifthayajob) ? route('job.application_history',Auth::user()->id) : route('project.application_history', Auth::user()->id) }}"
         class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         Back to Applications
       </a>

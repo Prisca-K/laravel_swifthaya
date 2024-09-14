@@ -5,8 +5,8 @@
         class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         {{ __('Company Dashboard') }}
       </h2>
-      <a href="{{Route("profile.edit", Auth::user()->id)}}">
-        <img class="w-12 h-12 object-cover rounded-full" src="{{Auth::user()->userprofile->getImgUrl()}}" alt="">
+      <a href="{{Route("profile.edit")}}">
+        <img class="w-12 h-12 object-top object-cover rounded-full" src="{{Auth::user()->userprofile->getImgUrl()}}" alt="">
       </a>
     </div>
   </x-slot>
@@ -20,28 +20,25 @@
         </div>
         @if ($user_profile->companyprofile)
           <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            href="{{Route("job.create",$user->id)}}"
+            href="{{Route("job.create")}}"
             >Post Job
           </a>
           <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            href="{{Route("project.create",$user->id)}}"
+            href="{{Route("project.create")}}"
             >Post Project
           </a>
           <a href="{{ Route("conversations.index") }}"
           class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           Messages
           </a>
-          @if ($jobs)
           <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            href="{{Route("jobs",$user->id)}}">
+            href="{{Route("jobs")}}">
           My Jobs
           </a>
           
-          @endif
         @else
         <a class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          href="{{Route("company.create",
-          $user_profile->id)}}">
+          href="{{Route("company.create")}}">
         Create Profile
         </a>
         @endif
@@ -55,70 +52,83 @@
 
   </div>
   @if ($jobs)
-
   <h2
-  style="font-size:1.5rem; text-align:center;margin-bottom:1rem">
-  My Jobs
+    style="font-size:1.5rem; text-align:center;margin-top:1rem">
+    My Jobs
   </h2>
-  <div
-    style="max-width:80%; background-color:rgba(128, 128, 128, 0.27);display:flex;flex-wrap:wrap"
-    class=" mx-auto p-6 items-center justify-center gap-4">
-    @forelse ($jobs as $job)
-    <div style="min-width: 20rem; max-width: 20rem"
-      class="bg-white shadow-sm sm:rounded-lg flex items-center justify-center flex-col p-6">
-      <div class="p-6 text-wrap">
-        <h3 style="font-size:1.2rem;">{{$job->title}}</h3>
-        <p>Description: {{$job->description}}</p>
-        <p>Required Skills: {{$job->required_skills}}</p>
-        <p>Salary Range: {{"$" . $job->salary_range}}</p>
-        <p>Job Type: {{$job->job_type}}</p>
-        <p>Deadline: {{$job->deadline_date}}</p>
-      </div>
+  <div class="bg-white rounded-lg shadow-md p-4 mx-12 overflow-x-scroll">
+    <table class="min-w-full table-auto">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="px-4 py-2">Title</th>
+          <th class="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse($jobs as $job)
+        <tr>
+          <td class="border px-4 py-2">
+          {{ $job->title }}
+          </td>
 
-        <a class=" w-3/4 flex justify-center items-center"
-          href="{{Route("job.show", $job->id)}}"
-          style="border: 2px solid gray; padding:5px;
-          height:3rem; border-radius:5px;">View Job
-        </a>    
+          <td class="border px-4 py-2">
+            <a href="{{ route('job.show', $job->id) }}"
+              class="text-blue-600 hover:text-blue-900 mr-3">View Job
+            </a>
+          </td>
+        </tr>
+        @empty
+        <tr>
+          <td class="text-2xl">
+            No Job created Yet
+          </td>
+        </tr>
+        @endforelse
+      </tbody>
+    </table>
+
+    <div class="mt-6">
+      {{-- {{ $jobs->links() }} --}}
     </div>
-    @empty
-    <p>No Jobs Posted Yet</p>
-    @endforelse
   </div>
   @endif
   @if ($projects)
   <h2
-  style="font-size:1.5rem; text-align:center;margin-top:1rem">
-  My Projects
+    style="font-size:1.5rem; text-align:center;margin-top:1rem">
+    My Projects
   </h2>
-  <div class="py-12">
-    <div
-      style="max-width:80%; background-color:rgba(128, 128,
-      128, 0.27); display:flex; flex-wrap:wrap"
-      class=" mx-auto p-6 items-center justify-center gap-4">
-      @forelse ($projects as $project)
-      <div style="min-width: 20rem; max-width: 20rem"
-        class="bg-white shadow-sm sm:rounded-lg flex items-center justify-center flex-col p-6">
-        <div class="p-6 text-wrap">
-          <h3 style="font-size:1.2rem;">{{$project->title}}
-          </h3>
-          <p>Description: {{$project->description}}</p>
-          <p>Required Skills: {{$project->required_skills}}
-          </p>
-          <p>Budget: {{"$" . $project->budget}}</p>
-          <p>Duration: {{$project->duration}} months</p>
-          <p>Deadline: {{$project->deadline_date}}</p>
-        </div>
+  <div class="bg-white rounded-lg shadow-md p-4 mb-10 mx-12 overflow-x-scroll">
+    <table class="min-w-full table-auto">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="px-4 py-2">Title</th>
+          <th class="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse($projects as $project)
+        <tr>
+          <td class="border px-4 py-2">{{ $project->title
+            }}
+          </td>
 
-        <a class=" w-3/4 flex justify-center items-center"
-        href="{{Route("project.show", $project->id)}}"
-        style="border: 2px solid gray; padding:5px;
-        height:3rem; border-radius:5px;">View Project
-      </a>
-      </div>
-      @empty
-      <p>No Projects Posted Yet</p>
-     @endforelse
+          <td class="border px-4 py-2">
+            <a href="{{ route('project.show', $project->id) }}"
+              class="text-green-600 hover:text-green-900 mr-3">View project
+            </a>
+          </td>
+        </tr>
+        @empty
+        <tr>
+          <td><p class="text-2xl">No Projects Posted</p></td>
+        </tr>
+        
+        @endforelse
+      </tbody>
+    </table>
+
+    <div class="mt-6">
+      {{-- {{ $projects->links() }} --}}
     </div>
   </div>
   @endif
