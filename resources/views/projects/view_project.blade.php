@@ -18,7 +18,10 @@
       <div>
         <p><strong>Name:</strong> {{ $project->title }}
 
-        <p><strong>Skills:</strong> {{ $project->required_skills }}
+        <p><strong>Skills:</strong> 
+          @foreach (json_decode($project->required_skills) as $skill)
+            <li>{{$skill}}</li>
+            @endforeach
         </p>
         <p><strong>Duration:</strong> 
         {{(intval( $project->duration) > 1) ?  $project->duration . " " . "months" : $project->duration . " " . "month"}}
@@ -31,7 +34,7 @@
           ucfirst($project->deadline_date) }}</p>
       </div>
       <div class="mt-4">
-        <a href="{{ route('company.dashboard', Auth::user()->id) }}"
+        <a href="{{ route('company.dashboard') }}"
           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Back</a>
         <a href="{{ route('project.edit', $project->id) }}"
           class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit</a>

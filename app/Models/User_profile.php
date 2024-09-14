@@ -25,7 +25,7 @@ class User_profile extends Model
   }
   public function talentprofile()
   {
-    return $this->belongsTo(Talent_profile::class, 'user_profile_id', 'id');
+    return $this->hasOne(Talent_profile::class);
   }
   public function companyprofile()
   {

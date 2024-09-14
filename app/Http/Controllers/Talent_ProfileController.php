@@ -2,84 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTalent_profileRequest;
-use App\Http\Requests\UpdateTalent_profileRequest;
-use App\Models\Conversation;
+
 use App\Models\Project;
 use App\Models\Swifthayajob;
 use App\Models\Talent_profile;
 use App\Models\User;
 use App\Models\User_profile;
-use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
-use function PHPUnit\Framework\isNull;
-
 class Talent_ProfileController extends Controller
 {
 
-  public function index(User $user)
+  public function index()
   {
-    if ($user->id !== Auth::user()->id) {
-      abort("403");
-    }
-    // $conversation = Conversation::where("recipient_id", Auth::user()->id)->first();
-    // $recipient_id= false;
-    // if ($conversation) {
-    //   $recipient_id = $conversation->user_id;
-    // }
-    $user_profile = User_profile::where("user_id", $user->id)->first();
+
+    $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
     $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
 
     // boolval($user_profile->talentprofile)
     return view("talent.dashboard", compact("user_profile", "talent_profile"));
   }
 
-  public function create(User_profile $user_profile)
+  public function create()
   {
+    $user_profile = Auth::user()->userprofile;
     $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
     if (!is_null($talent_profile)) {
       Gate::authorize("view", $talent_profile);
       return view("talent.view_profile", compact("user_profile", "talent_profile"));
     }
+    // dd("hello");
     return view("talent.create_profile", compact("user_profile"));
   }
 
-  public function store(StoreTalent_profileRequest $request, User_profile $user_profile)
+  public function store()
   {
-    if ($user_profile->user_id !== Auth::user()->id) {
-      abort("403");
-    }
-    $validated = $request->validated();
-
+    $user_profile = Auth::user()->userprofile;
     $has_talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
-    if (!$has_talent_profile) {
 
-      $talent_profile = Talent_profile::create(
-        [
-          'user_profile_id' => $user_profile->id,
-          'skills' => $validated["skills"],
-          'experience' => $validated["experience"],
-          'education' => $validated["education"],
-          'portfolio' => $validated["portfolio"],
-        ]
-      );
-      return redirect()->route('talent.show', [$user_profile->id])->with('success', 'Talent profile created successfully.');
-    }
-
-    if ($has_talent_profile) {
+    if (!is_null($has_talent_profile)) {
+      // else ie if has_talent_profile is not null
       Gate::authorize("update", $has_talent_profile);
+
+      return redirect()->route("talent.show", $has_talent_profile->id);
     }
 
-    $talent_profile = $has_talent_profile;
-    return redirect()->route("talent.show", $user_profile->id);
+    $skillsArray = explode(',', request()->skills);
+    $experienceArray = request()->experience;
+    $educationArray = request()->education;
+    $portfolioArray = request()->portfolio;
+    // dd(json_encode($experienceArray), json_encode($skillsArray));
+    // dd(json_encode($experienceArray));
+
+    $talent_profile = Talent_profile::create(
+      [
+        'user_profile_id' => $user_profile->id,
+        'skills' => json_encode($skillsArray),
+        'experience' => json_encode($experienceArray),
+        'education' => json_encode($educationArray),
+        'portfolio' => json_encode($portfolioArray)
+      ]
+    );
+    return redirect()->route('talent.show', [$talent_profile->id])->with('success', 'Talent profile created successfully.');
   }
 
-  public function show(Talent_profile $talent_profile)
+  public function show()
   {
+    $talent_profile = Auth::user()->userprofile->talentprofile;
+    // dd($talent_profile);
     Gate::authorize("view", $talent_profile);
+    // dd(json_decode($talent_profile->experience, true));
+    // $education = json_decode($talent_profile->education, true);
     return view("talent.view_profile", compact("talent_profile"));
   }
 
@@ -87,40 +82,43 @@ class Talent_ProfileController extends Controller
   {
     Gate::authorize("update", $talent_profile);
     $user_profile = User_profile::where("id", $talent_profile->user_profile_id)->first();
-    // dd($user_profile->id);
+    // dd(json_decode($talent_profile->education, true));
     return view("talent.edit_profile", compact("talent_profile", "user_profile"));
   }
 
-  public function update(UpdateTalent_profileRequest $request, Talent_profile $talent_profile)
+  public function update(Talent_profile $talent_profile)
   {
     Gate::authorize("update", $talent_profile);
     // validation rules
-    $user_profile = User_profile::where("id", $talent_profile->user_profile_id)->first();
-    $validated = $request->validated();
+
+    $skillsArray = explode(',', request()->skills);
+    $experienceArray = request()->experience;
+    $educationArray = request()->education;
+    $portfolioArray = request()->portfolio;
+    // dd(json_encode($experienceArray), json_encode($skillsArray));
+    // dd(json_encode($educationArray));
+
 
     $talent_profile->update(
       [
-        'user_profile_id' => $user_profile->id,
-        'skills' => $validated["skills"],
-        'experience' => $validated["experience"],
-        'education' => $validated["education"],
-        'portfolio' => $validated["portfolio"],
+        'skills' => json_encode($skillsArray),
+        'experience' => json_encode($experienceArray),
+        'education' => json_encode($educationArray),
+        'portfolio' => json_encode($portfolioArray)
       ]
     );
-
-    
-    return redirect()->route('talent.show', [$talent_profile->id])->with('success', 'Talent profile created successfully.');
+    return redirect()->route('talent.show')->with('success', 'Talent profile created successfully.');
   }
 
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(Talent_profile $talent_profile)
-  {
-    Gate::authorize("delete", $talent_profile);
-    $talent_profile->delete();
-    return redirect()->route("talent.dashboard", Auth::user()->id);
-  }
+  // public function destroy(Talent_profile $talent_profile)
+  // {
+  //   Gate::authorize("delete", $talent_profile);
+  //   $talent_profile->delete();
+  //   return redirect()->route("talent.dashboard", Auth::user()->id);
+  // }
 
 
   public function talent_details(Talent_profile $talent_profile)
@@ -128,16 +126,9 @@ class Talent_ProfileController extends Controller
     return view("talent.talent_details", compact("talent_profile"));
   }
 
-
-  // public function find_jobs()
-  // {
-  //   $jobs = Swifthayajob::with('user')->latest()->paginate(4);
-  //   return view("talent.find_jobs", compact("jobs"));
-  // }
-
   public function job_search(Request $request)
   {
-    $query = Swifthayajob::with("user");
+    $query = Swifthayajob::with("user")->where('status', "approved");
 
 
     if (!empty($request->keyword)) {
@@ -164,6 +155,13 @@ class Talent_ProfileController extends Controller
         $q->where('required_skills', 'like', '%' . $required_skills . '%');
       });
     }
+    // Filtering by salary_range
+    if ($request->filled('salary_range')) {
+      $salary_range = $request->input('salary_range');
+      $query->where(function ($q) use ($salary_range) {
+        $q->where('salary_range', 'like', '%' . $salary_range . '%');
+      });
+    }
 
 
 
@@ -187,15 +185,10 @@ class Talent_ProfileController extends Controller
 
     return view('talent.find_jobs', compact('jobs'));
   }
-  // public function find_projects()
-  // {
-  //   $projects = Project::with('user')->latest()->paginate(4);
-  //   return view("talent.find_projects", compact("projects"));
-  // }
 
   public function project_search(Request $request)
   {
-    $query = Project::with("user");
+    $query = Project::with("user")->where('status', "approved");
 
 
     if (!empty($request->keyword)) {

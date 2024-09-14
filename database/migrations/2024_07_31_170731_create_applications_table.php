@@ -18,7 +18,7 @@ return new class extends Migration
       $table->foreignId('project_id')->nullable()->constrained('projects')->cascadeOnDelete();
       $table->text('cover_letter')->nullable();
       $table->string('attachments')->nullable();
-      $table->enum('status', ['Pending', 'Accepted', 'Rejected'])->default('Pending');
+      $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
       $table->timestamp("applied_at")->nullable();
       $table->timestamps();
     });

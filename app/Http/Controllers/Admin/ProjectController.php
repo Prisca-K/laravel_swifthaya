@@ -40,7 +40,6 @@ class ProjectController extends Controller
   {
 
     $validated = $request->validated();
-    $validated["poster_id"] = $project->user->id;
     $project->update($validated);
     return redirect()->route('admin.projects')->with('success', 'Project updated successfully.');
   }
@@ -53,7 +52,7 @@ class ProjectController extends Controller
   public function approveProject(Project $project)
   {
     $project = Project::where("id", $project->id);
-    $status = $project->status = 'approved';
+    $status = 'approved';
     $project->update(["status" => $status]);
 
     return redirect()->route('admin.projects')->with('success', 'Project has been approved successfully.');
@@ -63,7 +62,7 @@ class ProjectController extends Controller
   public function rejectProject(Project $project)
   {
     $project = Project::where("id", $project->id);
-    $status = $project->status = 'rejected';
+    $status = 'rejected';
     $project->update(["status" => $status]);
 
     return redirect()->route('admin.projects')->with('error', 'Project has been rejected.');

@@ -25,6 +25,7 @@ class AuthenticatedSessionController extends Controller
    */
   public function store(LoginRequest $request): RedirectResponse
   {
+    // dd($request);
     $request->authenticate();
 
     $request->session()->regenerate();
@@ -32,13 +33,13 @@ class AuthenticatedSessionController extends Controller
 
 
     if (Auth::user()->user_type === "company") {
-      return redirect(route('company.dashboard', Auth::user()->id));
+      return redirect(route('company.dashboard'));
     } elseif (Auth::user()->user_type === "individual") {
-      return redirect(route('individual.dashboard', Auth::user()->id));
+      return redirect(route('individual.dashboard'));
     } elseif (Auth::user()->user_type === "talent") {
-      return redirect(route('talent.dashboard', Auth::user()->id));
+      return redirect(route('talent.dashboard'));
     } elseif (Auth::user()->user_type === "admin") {
-      return redirect(route('admin.dashboard', Auth::user()->id));
+      return redirect(route('admin.dashboard'));
     }
   }
 

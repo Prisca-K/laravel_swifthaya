@@ -17,30 +17,35 @@ use Illuminate\Support\Facades\Storage;
 class ApplicationController extends Controller
 {
   /* jobs */
-  public function job_apply(Swifthayajob $job, User $user,)
+  public function job_apply(Swifthayajob $job)
   {
-    $user_profile = User_profile::where("user_id", $user->id)->first();
-    $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->count();
+    $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
+
+    $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
     // check if user has a talent profile before applying
-    if ($talent_profile === 0) {
+    if (is_null($talent_profile)) {
       return redirect()->route("talent.create", $user_profile->id);
+    }
+    // check if talent profile is approved
+    if (Auth::user()->status !== "approved" || $talent_profile->status !== "approved") {
+      return redirect()->route("talent.show")->with("error", "Your profile has not been approved");
     }
     // user doesn't apply for a job twice
     $has_applied_to_job = Application::where(["applicant_id" => Auth::user()->id, "swifthayajob_id" => $job->id])->count();
     if ($has_applied_to_job > 0) {
-      return redirect()->route("talent.job.apply.history", $user->id);
+      return redirect()->route("job.application_history");
     }
     return view("talent.job_application_page", compact("job"));
   }
 
   // store job application
-  public function job_store_application(Request $request, Swifthayajob $job, User $user)
+  public function job_store_application(Request $request, Swifthayajob $job)
   {
 
-    $has_applied_to_job = Application::where(["applicant_id" => Auth::user()->id, "swifthayajob_id" => $job->id])->count();
-    if ($has_applied_to_job > 0) {
-      return redirect()->route("talent.job.apply.history", $user->id);
-    }
+    // $has_applied_to_job = Application::where(["applicant_id" => Auth::user()->id, "swifthayajob_id" => $job->id])->count();
+    // if ($has_applied_to_job > 0) {
+    //   return redirect()->route("job.application_history", $user->id);
+    // }
 
     $validated = $request->validate([
       'job_title' => ['required', 'string', 'max:255'],
@@ -62,39 +67,39 @@ class ApplicationController extends Controller
       'job_title' => $validated['job_title'],
       'cover_letter' => $validated['cover_letter'],
       'attachments' => $validated["attachments"],
-      "applied_at" => $validated["applied_at"],
+      "applied_at" => now(),
     ]);
 
 
-    return redirect()->route("talent.job.apply.history", $user->id);
+    return redirect()->route("job.application_history");
   }
 
   // job application history
-  public function job_application_history(User $user)
+  public function job_application_history()
   {
 
-    if ($user->id !== Auth::user()->id) {
-      abort(403);
-    }
-
     $applications = Application::where("applicant_id", Auth::user()->id)->whereNotNull('swifthayajob_id')->get();
-
-
     return view("talent.job_application_history", compact("applications"));
-    // }
   }
 
-
+  
   /*  projects */
 
   // apply page
-  public function project_apply(Project $project, User $user)
+  public function project_apply(Project $project)
   {
-    $user_profile = User_profile::where("user_id", $user->id)->first();
-    $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->count();
+
+    $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
+
     // check if user has a talent profile before applying
-    if ($talent_profile === 0) {
+    $talent_profile = Talent_profile::where("user_profile_id", $user_profile->id)->first();
+
+    if (is_null($talent_profile)) {
       return redirect()->route("talent.create", $user_profile->id);
+    }
+
+    if (Auth::user()->status !== "approved" || $talent_profile->status !== "approved") {
+      return redirect()->route("talent.show")->with("error", "Your profile has not been approved");
     }
 
     // user doesn't apply for a job twice
@@ -102,19 +107,19 @@ class ApplicationController extends Controller
 
     // dd($has_applied_to_project);
     if ($has_applied_to_project > 0) {
-      return redirect()->route("talent.project.apply.history", $user->id);
+      return redirect()->route("project.application_history");
     }
     return view("talent.project_application_page", compact("project"));
   }
 
   // store project application 
-  public function project_store_application(Request $request, Project $project, User $user)
+  public function project_store_application(Request $request, Project $project)
   {
-    // dd($project);
-    $has_applied_to_project = Application::where(["applicant_id" => Auth::user()->id, "project_id" => $project->id])->count();
-    if ($has_applied_to_project > 0) {
-      return redirect()->route("talent.project.apply.history", $user->id);
-    }
+    // // dd($project);
+    // $has_applied_to_project = Application::where(["applicant_id" => Auth::user()->id, "project_id" => $project->id])->count();
+    // if ($has_applied_to_project > 0) {
+    //   return redirect()->route("project.application_history", $user->id);
+    // }
 
     $validated = $request->validate([
       'project_title' => ['required', 'string', 'max:255'],
@@ -131,7 +136,7 @@ class ApplicationController extends Controller
       $validated["attachments"] = $attachmentPath;
     }
     Application::create([
-      'applicant_id' => $user->id,
+      'applicant_id' => Auth::user()->id,
       'project_id' => $project->id,
       'project_title' => $validated['project_title'],
       'cover_letter' => $validated['cover_letter'],
@@ -139,24 +144,18 @@ class ApplicationController extends Controller
       "applied_at" => $validated["applied_at"],
     ]);
 
-    return redirect()->route("talent.project.apply.history", $user->id);
+    return redirect()->route("project.application_history");
   }
 
   // job application history
-  public function project_application_history(User $user)
+  public function project_application_history()
   {
-
-    if ($user->id !== Auth::user()->id) {
-      abort(403);
-    }
-
-
     $applications = Application::where("applicant_id", Auth::user()->id)->whereNotNull('project_id')->get();
     return view("talent.project_application_history", compact("applications"));
   }
 
 
-  public function showjob(Application $application)
+  public function job_details(Application $application)
   {
     // dd($application->swifthayajob);
 
@@ -173,7 +172,7 @@ class ApplicationController extends Controller
 
   public function accept(Application $application)
   {
-    $application->status = 'Accepted';
+    $application->status = 'accepted';
     $application->save();
 
     return redirect()->back()->with('success', 'Application accepted successfully.');
@@ -181,7 +180,7 @@ class ApplicationController extends Controller
 
   public function reject(Application $application)
   {
-    $application->status = 'Rejected';
+    $application->status = 'rejected';
     $application->save();
 
     return redirect()->back()->with('success', 'Application rejected successfully.');

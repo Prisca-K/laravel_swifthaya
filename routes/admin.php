@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProfilesController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SwifthayajobController;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::prefix('admin')->middleware("auth", "can:admin", "verified")->group(function () {
-  Route::get('/{user}/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+  Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
   // Add other routes for managing users, jobs, etc.
 
 
@@ -57,7 +58,7 @@ Route::prefix('admin')->middleware("auth", "can:admin", "verified")->group(funct
 
   Route::get('/talents/{talent}', [ProfilesController::class, 'viewTalent'])->name('admin.talents.view');
   Route::get('/talents/{talent}/edit', [ProfilesController::class, 'editTalent'])->name('admin.talents.edit');
-  Route::post('/talents/{talent}/edit', [ProfilesController::class, 'updateTalent'])->name('admin.talents.update');
+  Route::patch('/talents/{talent}/edit', [ProfilesController::class, 'updateTalent'])->name('admin.talents.update');
   Route::delete('/talents/{talent}', [ProfilesController::class, 'deleteTalent'])->name('admin.talents.destroy');
 
   Route::get('/talents/{talent}/approve', [ProfilesController::class, 'approveTalent'])->name('admin.talents.approve');
@@ -88,4 +89,10 @@ Route::prefix('admin')->middleware("auth", "can:admin", "verified")->group(funct
   Route::get('/messages', [MessageController::class, 'index'])->name('admin.messages');
   Route::get('/messages/{message}', [MessageController::class, 'show'])->name('admin.messages.show');
   Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('admin.messages.destroy');
+
+  /* payment */
+
+  Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments');
+  Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('admin.payments.show');
+  Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('admin.payments.destroy');
 });

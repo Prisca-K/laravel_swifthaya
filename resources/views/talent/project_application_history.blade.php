@@ -55,7 +55,7 @@
             </td>
             <td
               class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <a href="{{ route('applications.showjob', $application->id) }}"
+              <a href="{{ route('applications.job_details', $application->id) }}"
                 class="text-blue-600 hover:text-blue-900">View</a>
             </td>
           </tr>

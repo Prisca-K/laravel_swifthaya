@@ -23,12 +23,13 @@ use function PHPUnit\Framework\isEmpty;
 class SwifthayajobController extends Controller
 {
 
-  public function index(User $user)
+  public function index()
   {
+    $user = Auth::user();
     $jobs = Swifthayajob::where("company_id", $user->id)->get();
-    if (count($jobs) === 0) {
-      return redirect()->route("job.create", $user->id);
-    }
+    // if (count($jobs) === 0) {
+    //   return redirect()->route("job.create");
+    // }
     foreach ($jobs as $job) {
       Gate::authorize("view", $job);
     }
@@ -36,23 +37,32 @@ class SwifthayajobController extends Controller
     return view("company.jobs.job_posts", compact('user', "jobs"));
   }
 
-  public function create(User $user)
+  public function create()
   {
-    $hascompanyprofile = Company_profile::where("user_profile_id", $user->userprofile->id)->exists();
-    // dd($hascompanyprofile);
-    if (!$hascompanyprofile) {
-      return redirect()->route("profile.edit", Auth::user()->id);
+    $user = Auth::user();
+    $company_profile = $user->userprofile->companyprofile;
+    // dd($company_profile);
+    if (is_null($company_profile)) {
+      return redirect()->route("companies.create");
+    }
+    // check if company profile is approved
+    if ($user->status !== "approved" || $company_profile->status !== "approved") {
+      return redirect()->route("profile.edit")->with("error", "Your profile has not been approved");
     }
     return view("company.jobs.create_job", compact('user'));
   }
 
-  public function store(StoreSwifthayajobRequest $request, User $user)
+  public function store(StoreSwifthayajobRequest $request)
   {
+    $user = Auth::user();
+
+    $skillsArray = explode(',', request()->required_skills);
     $validated = $request->validated();
     $validated["company_id"] = $user->id;
+    $validated["required_skills"] = json_encode($skillsArray);
 
     Swifthayajob::create($validated);
-    return redirect()->route("jobs", $user->id);
+    return redirect()->route("jobs");
   }
 
   public function show(Swifthayajob $job)
@@ -74,11 +84,13 @@ class SwifthayajobController extends Controller
   {
     // dd($job);
     Gate::authorize("update", $job);
+    $skillsArray = explode(',', request()->required_skills);
     $validated = $request->validated();
     $user = User::where("id", $job->company_id)->first();
-    $validated["company_id"] = $user->id;
+    $validated["required_skills"] = json_encode($skillsArray);
+
     $job->update($validated);
-    return redirect()->route("company.dashboard", $user->id);
+    return redirect()->route("company.dashboard");
   }
 
   public function destroy(Swifthayajob $job)
@@ -103,7 +115,18 @@ class SwifthayajobController extends Controller
   // job offers
   public function offer_job(Talent_profile $talent_profile)
   {
-
+    $user = Auth::user();
+    // check if company profile is approved
+    if ($user->user_type === "company") {
+      if ($user->status !== "approved" || $user->userprofile->companyprofile->status !== "approved") {
+        return redirect()->route("profile.edit")->with("error", "Your profile has not been approved");
+      }
+    } else {
+      // check if individual is approved
+      if ($user->status !== "approved") {
+        return redirect()->route("profile.edit")->with("error", "Your profile has not been approved");
+      }
+    }
     $user_profile = User_profile::where("user_id", Auth::user()->id)->first();
     // $job = Swifthayajob::where("id", 8)->first();
 
@@ -114,7 +137,6 @@ class SwifthayajobController extends Controller
       $hasproject = true;
     } else $hasproject = false;
     // dd($projects);
-    // $company_profile = Company_profile::where("user_profile_id", $user_profile->id)->first();
 
     $candidate = $talent_profile;
 
@@ -129,13 +151,5 @@ class SwifthayajobController extends Controller
     $applications = Application::where("swifthayajob_id", $job->id)->get();
     $isjob = true;
     return view("shared.view_applicants", compact("job", "applications", "isjob"));
-  }
-  public function view_project_applicants(Project $project)
-  {
-
-    Gate::authorize("update", $project);
-    $applications = Application::where("project_id", $project->id)->get();
-    $isjob = false;
-    return view("shared.view_applicants", compact("project", "applications", "isjob"));
   }
 }
