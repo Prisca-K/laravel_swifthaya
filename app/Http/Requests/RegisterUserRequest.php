@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
-use Illuminate\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules;
 
-class StoreUserRequest extends FormRequest
+class RegisterUserRequest extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.

@@ -16,9 +16,7 @@ use App\Models\User_profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use PhpParser\Node\Stmt\Switch_;
 
-use function PHPUnit\Framework\isEmpty;
 
 class SwifthayajobController extends Controller
 {

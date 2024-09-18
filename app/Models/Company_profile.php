@@ -27,6 +27,6 @@ class Company_profile extends Model
   }
   public function swifthayajob()
   {
-    return $this->hasMany(SwifthayaJob::class, 'swifthayajob_id');
+    return $this->hasMany(SwifthayaJob::class, 'company_id');
   }
 }

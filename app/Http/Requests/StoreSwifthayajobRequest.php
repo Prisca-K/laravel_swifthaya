@@ -24,10 +24,10 @@ class StoreSwifthayajobRequest extends FormRequest
     return [
       'title' => 'required|string|max:255',
       'description' => 'required|string',
+      'job_type' => 'required|in:full-time,part-time,contract',
       'required_skills' => 'nullable|string',
       'location' => 'nullable|string|max:255',
       'salary_range' => 'nullable|string|max:255',
-      'job_type' => 'required|in:full-time,part-time,contract',
       'posted_at' => 'nullable|date',
       'deadline_date' => 'nullable|date|after_or_equal:posted_at',
     ];

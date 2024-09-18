@@ -36,6 +36,6 @@ class Swifthayajob extends Model
   }
   public function application()
   {
-    return $this->hasMany(Application::class);
+    return $this->hasMany(Application::class, "swifthayajob_id");
   }
 }

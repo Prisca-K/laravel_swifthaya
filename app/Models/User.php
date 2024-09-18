@@ -22,6 +22,7 @@ class User extends Authenticatable
     'email',
     'password',
     'user_type',
+    'last_login_at'
   ];
 
   /**
@@ -70,7 +71,7 @@ class User extends Authenticatable
   {
     return $this->hasMany(Application::class, 'applicant_id');
   }
-  public function swifthayajobs()
+  public function swifthayajob()
   {
     return $this->hasMany(SwifthayaJob::class, 'company_id');
   }
