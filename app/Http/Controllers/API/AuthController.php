@@ -3,35 +3,35 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\RegisterUserRequest;
+use App\Http\Resources\UserProfileResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 use App\Models\User;
 use App\Models\User_profile;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
 
-  public function register(Request $request)
+  public function register(RegisterUserRequest $request)
   {
-    // Validate the request
-    $validated = $request->validate([
-      'first_name' => ['required', 'string', 'max:255'],
-      'last_name' => ['required', 'string', 'max:255'],
-      'email' => ['required', 'email', 'max:255', 'unique:users'],
-      'password' => ['required', 'string', 'min:8', 'confirmed'],
-      'user_type' => ['required', 'in:company,individual,talent,admin'],
-    ]);
+    // Validate the request data
+    $validated = $request->validated();
 
     // Create the user
     $user = User::create([
       'email' => $validated["email"],
       'password' => Hash::make($validated["password"]),
       'user_type' => $validated["user_type"],
+      'last_login_at' => now()
     ]);
 
-    // Create the user profile if the user is created
+    // Create the user profile if user creation is successful
     if ($user) {
       User_profile::create([
         'user_id' => $user->id,
@@ -39,36 +39,43 @@ class AuthController extends Controller
         'last_name' => ucfirst($validated["last_name"]),
       ]);
 
-      // If using JWT or Sanctum, create a token
+      // Create an API token (if using Sanctum or JWT)
       $token = $user->createToken('API Token')->plainTextToken;
 
-      // Return success response with user data and token
+      // Return a success response with the token and user details
+      return [
+        "user" => new UserResource($user),
+        "user_profile" => new UserProfileResource($user->userprofile),
+        "token" => $token
+      ];  // Use resource to format the response
+
+    }
+
+    return response()->json(['message' => 'User registration failed'], 500);
+  }
+
+  public function login(LoginUserRequest $request)
+  {
+    $validated = $request->validated();
+
+    $user = User::where("email", $validated["email"])->first();
+    if (!$user || !Hash::check($validated["password"], $user->password)) {
       return response()->json([
-        'message' => 'Registration successful',
-        'user' => $user,
-        'profile' => $user->profile,
-        'token' => $token,  // Include token for authentication
-      ], 201); // 201 indicates resource creation
+        "message" => "The provided credentials are incorrect"
+      ]);
     }
-    if (!$validated) {
-      // If something goes wrong, return a generic error
-      return response()->json(['message' => 'User registration failed'], 500);
-    }
-  }
-  public function login(string $id)
-  {
-    return "register";
+    $token = $user->createToken('API Token')->plainTextToken;
+    return response()->json([
+      'message' => 'login successful',
+      'token' => $token,
+    ], 200);
   }
 
-  /**
-   * Update the specified resource in storage.
-   */
-
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(string $id)
+  public function logout(Request $request)
   {
-    //
+    $request->user()->tokens()->delete();
+    return [
+      'message' => 'logout successful'
+    ];
   }
 }

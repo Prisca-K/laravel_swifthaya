@@ -10,8 +10,6 @@ Route::get("/talents/dashboard", [Talent_ProfileController::class, "index"])->mi
 
 Route::get("talents/job-application-history", [ApplicationController::class, "job_application_history"])->middleware(['auth', 'verified', "can:talent"])->name('job.application_history');
 
-Route::get("talents/project-application-history", [ApplicationController::class, "project_application_history"])->middleware(['auth', 'verified', "can:talent"])->name('project.application_history');
-
 Route::get("/talent-profiles", [Talent_ProfileController::class, "create"])->middleware(['auth', 'verified', "can:talent"])->name('talent.create');
 
 Route::post("/talent-profiles", [Talent_ProfileController::class, "store"])->middleware(['auth', 'verified', "can:talent"])->name('talent.store');
@@ -28,8 +26,7 @@ Route::patch("/talent-profiles/{talent_profile}", [Talent_ProfileController::cla
 // check upwork profiles
 Route::get("/talent-profiles/{talent_profile}/details", [Talent_ProfileController::class, "talent_details"])->middleware(['auth', 'verified', "can:individual_company"])->name('talent.details');
 
+Route::get("talents/project-application-history", [ApplicationController::class, "project_application_history"])->middleware(['auth', 'verified', "can:talent"])->name('project.application_history');
 
-
-Route::get("/find-talents", [IndividualController::class, "find_talents"])->middleware(['auth', 'verified', "can:individual_company"])->name('find_talents');
 
 Route::get("/talent-search", [IndividualController::class, "talent_search"])->middleware(['auth', 'verified', "can:individual_company"])->name('talent_search');

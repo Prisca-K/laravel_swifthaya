@@ -61,14 +61,10 @@ class ApplicationController extends Controller
 
       $validated["attachments"] = $attachmentPath;
     }
-    Application::create([
-      'applicant_id' => Auth::user()->id,
-      'swifthayajob_id' => $job->id,
-      'job_title' => $validated['job_title'],
-      'cover_letter' => $validated['cover_letter'],
-      'attachments' => $validated["attachments"],
-      "applied_at" => now(),
-    ]);
+    $validated["job_title"] = $job->title;
+    $validated["applied_at"] = now();
+
+    Application::create($validated);
 
 
     return redirect()->route("job.application_history");
@@ -167,8 +163,6 @@ class ApplicationController extends Controller
 
     return view("shared.view_applicants_details", compact("application"));
   }
-
-
 
   public function accept(Application $application)
   {
