@@ -17,6 +17,7 @@ return new class extends Migration
       $table->foreignId('reviewee_id')->constrained('users')->cascadeOnDelete();
       $table->text('comment');
       $table->tinyInteger('rating')->unsigned();
+      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
       $table->timestamps();
     });
   }

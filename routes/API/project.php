@@ -1,25 +1,31 @@
 <?php
 
-use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\V1\ProjectController;
 use App\Http\Controllers\API\TrackingController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', "can:individual_company"])->prefix("/projects")->group(function () {
+
+  // List all projects
   Route::get("/", [ProjectController::class, "index"]);
 
+  // View a single project (store)
   Route::get("/{project}", [ProjectController::class, "show"]);
 
-  Route::post("/store", [ProjectController::class, "store"]);
+  // Create a new project (store)
+  Route::post("/", [ProjectController::class, "store"]);
 
-  Route::patch("/{project}/update", [ProjectController::class, "update"]);
+  // Update an existing project
+  Route::patch("/{project}/", [ProjectController::class, "update"]);
 
-  Route::delete("/{project}", [ProjectController::class, "destroy"]);
+  // Delete an existing project
+  Route::delete("/{project}/", [ProjectController::class, "destroy"]);
 });
 
-Route::get("/project_search", [ProjectController::class, "project_search"])->middleware(['aut:sanctum', "can:talent"]);
+Route::get("/project_search", [ProjectController::class, "project_search"])->middleware(['auth:sanctum', "can:talent"]);
 
-Route::get('/project_tracking/pending', [TrackingController::class, 'pendingProject']);
+// Route::get('/project_tracking/pending', [TrackingController::class, 'pendingProject']);
 
-Route::patch('/project_tracking/{project}/complete', [TrackingController::class, 'completeProject']);
+// Route::patch('/project_tracking/{project}/complete', [TrackingController::class, 'completeProject']);
 
-Route::get('/project_tracking/{project}/start', [TrackingController::class, 'startProject']);
+// Route::get('/project_tracking/{project}/start', [TrackingController::class, 'startProject']);

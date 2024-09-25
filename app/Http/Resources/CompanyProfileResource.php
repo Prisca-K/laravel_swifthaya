@@ -21,6 +21,7 @@ class CompanyProfileResource extends JsonResource
       'industry' =>  $this->industry,
       'company_size' => $this->company_size,
       'founded_year' =>  $this->founded_year,
+      'status' => $this->status,
     ];
   }
 }

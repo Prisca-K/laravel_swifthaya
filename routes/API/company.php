@@ -1,14 +1,19 @@
 <?php
 
-use App\Http\Controllers\API\CompanyProfileController;
+use App\Http\Controllers\API\V1\CompanyProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', "can:company"])->prefix("/company-profile")->group(function () {
-Route::get("/", [CompanyProfileController::class, "show"]);
+Route::middleware(['auth:sanctum', "can:company"])->prefix("/company-profiles")->group(function () {
 
-Route::post("/store", [CompanyProfileController::class, "store"]);
+  // View a single company profile
+  Route::get("/", [CompanyProfileController::class, "show"]);
 
-Route::patch("/{company_profile}/update", [CompanyProfileController::class, "update"]);
+  // Create a new company profile
+  Route::post("/", [CompanyProfileController::class, "store"]);
 
-Route::delete("/{company_profile}/delete", [CompanyProfileController::class, "destroy"]);
+  // Update an existing company profile
+  Route::patch("/{company_profile}", [CompanyProfileController::class, "update"]);
+
+  // Delete a company profile
+  Route::delete("/{company_profile}", [CompanyProfileController::class, "destroy"]);
 });

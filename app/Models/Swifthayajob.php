@@ -16,7 +16,6 @@ class Swifthayajob extends Model
     'location',
     'salary_range',
     'job_type',
-    'posted_at',
     'deadline_date',
   ];
 

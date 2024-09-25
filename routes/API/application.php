@@ -1,28 +1,42 @@
 <?php
 
-use App\Http\Controllers\API\ApplicationController;
+use App\Http\Controllers\API\V1\ApplicationController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::middleware(['auth:sanctum'])->group(function () {
 
-Route::get("jobs/applicants", [ApplicationController::class, "view_job_applicants"])->middleware(["can:company", 'auth:sanctum']);
+  // Fetch applicants for a specific job
+  Route::get('/jobs/{job}/applicants', [ApplicationController::class, 'viewJobApplicants'])
+    ->middleware(['can:company']);
 
-Route::get("projects/applicants", [ApplicationController::class, "view_project_applicants"])->middleware(["can:individual_company", 'auth:sanctum']);
+  // Fetch applicants for a specific project
+  Route::get('/projects/{project}/applicants', [ApplicationController::class, 'viewProjectApplicants'])->middleware(['can:individual_company']);
 
 
+  Route::middleware(['can:individual_company'])->prefix('/applications')->group(function () {
 
-Route::middleware(['auth:sanctum', "can:individual_company"])->prefix("/applicants")->group(function () {
-  Route::patch('/{application}/accept', [ApplicationController::class, 'accept'])->middleware(['auth:sanctum', "can:individual_company"]);
+    // Accept application
+    Route::patch('/{application}/accept', [ApplicationController::class, 'accept']);
 
-  Route::patch('/{application}/reject', [ApplicationController::class, 'reject'])->middleware(['auth:sanctum', "can:individual_company"]);
-});
+    // Reject application
+    Route::patch('/{application}/reject', [ApplicationController::class, 'reject']);
+  });
 
-Route::middleware(['auth:sanctum', "can:talent"])->group(function () {
-  Route::get("talents/job-application-history", [ApplicationController::class, "job_application_history"]);
 
-  Route::get("talents/project-application-history", [ApplicationController::class, "project_application_history"]);
+  // talent
+  Route::middleware(['can:talent'])->prefix('/applications')->group(function () {
 
-  Route::post("jobs/{job}/apply", [ApplicationController::class, "job_apply"]);
+    // View all job applications made by the talent
+    Route::get('/jobs', [ApplicationController::class, 'jobApplications']);
 
-  Route::post("projects/{projects}/apply", [ApplicationController::class, "job_apply"]);
+    // View all project applications made by the talent
+    Route::get('/projects', [ApplicationController::class, 'projectApplications']);
+
+    // Apply for a job
+    Route::post('/jobs/{job}', [ApplicationController::class, 'applyForJob']);
+
+    // Apply for a project
+    Route::post('/projects/{project}', [ApplicationController::class, 'applyForProject']);
+  });
 });

@@ -1,18 +1,20 @@
 <?php
 
-use App\Http\Controllers\API\ReviewController;
+use App\Http\Controllers\API\V1\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->prefix("/reviews")->group(function () {
-  Route::get("/reviewer", [ReviewController::class, "reviewer"]);
-  Route::get("/reviewee", [ReviewController::class, "reviewee"]);
 
-  Route::post("/store", [ReviewController::class, "store"]);
+  // reviews written by the authenticated user
+  Route::get('/reviewed', [ReviewController::class, "reviewer"]);
+  // reviews that were recieved by the authenticated user
+  Route::get('/reviewers', [ReviewController::class, "reviewee"]);
+  // create a review
+  Route::post('/{reviewee_id}', [ReviewController::class, "store"]);
 
-  Route::patch("/{review}/update", [ReviewController::class, "update"]);
+  // update a review
+  Route::patch('/{review}/', [ReviewController::class, "update"]);
 
-  Route::delete("/{review}/destroy", [ReviewController::class, "destroy"]);
+  // delete a review
+  Route::delete("/{review}/", [ReviewController::class, "destroy"]);
 });
-
-
-

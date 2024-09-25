@@ -19,9 +19,10 @@ return new class extends Migration
       $table->string('required_skills')->nullable();
       $table->decimal('budget', 15, 2)->nullable();
       $table->integer('duration')->nullable(); // Project duration in days
-      $table->timestamps();
-      $table->timestamp('posted_at')->nullable(); // Project posting date
+      $table->timestamp('posted_at')->useCurrent(); // Project posting date
       $table->timestamp('deadline_date')->nullable();
+      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+      $table->timestamps();
     });
   }
 

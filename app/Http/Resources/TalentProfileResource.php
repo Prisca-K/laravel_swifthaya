@@ -21,7 +21,7 @@ class TalentProfileResource extends JsonResource
       'experience' => json_decode($this->experience),
       'education' => json_decode($this->education),
       'portfolio' => json_decode($this->portfolio),
-      'created_at' => $this->created_at->toDateTimeString(),  // Optional: format or remove this
+      'status' => $this->status,
     ];
   }
 }

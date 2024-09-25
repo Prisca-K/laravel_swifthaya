@@ -33,6 +33,7 @@ class UserController extends Controller
       'email' => $validated["email"],
       'password' => Hash::make($validated["password"]),
       'user_type' => $validated["user_type"],
+      'status' => now(),
     ]);
 
     // creating user profile
@@ -90,12 +91,11 @@ class UserController extends Controller
     return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
   }
   // Approve User
-  public function approveUser(User $user)
+  public function approve(User $user)
   {
-    // dd($user);
-    $user = User::where("id", $user->id);
-    // $status = $user->status = 'approved';
-    $user->update(["status" => "approved"]);
+   // Set the user status to 'approved'
+   $user->status = 'approved';
+   $user->save();
 
     return redirect()->route('admin.users')->with('success', 'User has been approved successfully.');
   }
@@ -103,9 +103,9 @@ class UserController extends Controller
   // Reject User
   public function rejectUser(User $user)
   {
-    $user = User::where("id", $user->id);
-    // $status = $user->status = 'rejected';
-    $user->update(["status" => "rejected"]);
+    // Set the user status to 'rejected'
+    $user->status = 'rejected';
+    $user->save();
 
     return redirect()->route('admin.users')->with('error', 'User has been rejected.');
   }

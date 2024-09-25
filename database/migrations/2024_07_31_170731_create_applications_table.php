@@ -16,10 +16,8 @@ return new class extends Migration
       $table->foreignId('applicant_id')->constrained('users')->cascadeOnDelete();
       $table->foreignId('swifthayajob_id')->nullable()->constrained('swifthayajobs')->cascadeOnDelete();
       $table->foreignId('project_id')->nullable()->constrained('projects')->cascadeOnDelete();
-      $table->text('cover_letter')->nullable();
-      $table->string('attachments')->nullable();
       $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
-      $table->timestamp("applied_at")->nullable();
+      $table->timestamp("applied_at")->useCurrent();
       $table->timestamps();
     });
   }

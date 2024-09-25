@@ -16,12 +16,9 @@ class ApplicationResource extends JsonResource
     {
         return [
           'id' => $this->id,
-          'job_title' => $this->job_title,
           'applicant_id' => $this->applicant_id,
           'swifthayajob_id' => $this->swifthayajob_id,
           'project_id' => $this->project_id,
-          'cover_letter' => $this->cover_letter,
-          'attachments' => $this->attachments, 
           'applied_at' => $this->applied_at,
         ];
     }

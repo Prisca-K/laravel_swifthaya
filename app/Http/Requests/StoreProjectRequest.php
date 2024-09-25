@@ -27,7 +27,6 @@ class StoreProjectRequest extends FormRequest
       'required_skills' => 'nullable|string',
       'budget' => 'nullable|numeric|min:0',
       'duration' => 'nullable|integer|min:1',
-      'posted_at' => 'nullable|date',
       'deadline_date' => 'nullable|date|after_or_equal:posted_at',
     ];
   }
