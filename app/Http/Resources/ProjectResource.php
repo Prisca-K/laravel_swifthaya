@@ -22,8 +22,9 @@ class ProjectResource extends JsonResource
       'required_skills' => $this->required_skills,
       'budget' => $this->budget,
       'duration' => $this->duration,
-      'posted_at' => $this->posted_at,
-      'deadline_date' => $this->posted_at,
+      'posted_at' => $this->posted_at->toDateTimeString(),
+      'deadline_date' => (is_null($this->deadline_date)) ? $this->deadline_date : $this->deadline_date->toDateTimeString(),
+      'status' => $this->status,
     ];
   }
 }

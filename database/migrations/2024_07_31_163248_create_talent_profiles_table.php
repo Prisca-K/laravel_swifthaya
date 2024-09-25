@@ -18,6 +18,7 @@ return new class extends Migration
       $table->json('experience')->nullable();
       $table->json('education')->nullable();
       $table->json('portfolio')->nullable();
+      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
       $table->timestamps();
     });
   }

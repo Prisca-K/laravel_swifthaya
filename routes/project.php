@@ -31,9 +31,9 @@ Route::get("/project_search", [Talent_ProfileController::class, "project_search"
 
 // application
 
-Route::get("project{project}/apply", [ApplicationController::class, "project_apply"])->middleware(['auth', 'verified', "can:talent"])->name('project.apply');
+// Route::get("project{project}/apply", [ApplicationController::class, "project_apply"])->middleware(['auth', 'verified', "can:talent"])->name('project.apply');
 
-Route::post("project{project}/apply", [ApplicationController::class, "project_store_application"])->middleware(['auth', 'verified', "can:talent"])->name('project.store_application');
+// Route::post("project{project}/apply", [ApplicationController::class, "project_store_application"])->middleware(['auth', 'verified', "can:talent"])->name('project.store_application');
 
 
-Route::get("project{project}/applicants", [SwifthayajobController::class, "view_project_applicants"])->middleware(['auth', 'verified', "can:individual_company"])->name('project.applicants');
+// Route::get("project{project}/applicants", [SwifthayajobController::class, "view_project_applicants"])->middleware(['auth', 'verified', "can:individual_company"])->name('project.applicants');

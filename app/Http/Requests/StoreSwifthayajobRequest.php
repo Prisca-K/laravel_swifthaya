@@ -28,7 +28,6 @@ class StoreSwifthayajobRequest extends FormRequest
       'required_skills' => 'nullable|string',
       'location' => 'nullable|string|max:255',
       'salary_range' => 'nullable|string|max:255',
-      'posted_at' => 'nullable|date',
       'deadline_date' => 'nullable|date|after_or_equal:posted_at',
     ];
   }

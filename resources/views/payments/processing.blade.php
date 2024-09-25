@@ -57,13 +57,7 @@
   </div>
 
   <script>
-    const reference = document.getElementById        ('reference').value;
-    function handlePayment(reference) {
-      // Redirect or handle the form submission outside of the callback
-      localStorage.setItem('paymentReference', reference);
-      window.location.href = "{{ route('payment.callback') }}";
-    }
-
+    const reference = document.getElementById('reference').value;
     function payWithPaystack() {
         const paystack = new PaystackPop();
         paystack.newTransaction({

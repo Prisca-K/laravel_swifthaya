@@ -18,6 +18,7 @@ return new class extends Migration
       $table->string('industry');
       $table->string('company_size');
       $table->year('founded_year')->nullable();
+      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
       $table->timestamps();
     });
   }

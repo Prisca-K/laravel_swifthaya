@@ -24,6 +24,7 @@ return new class extends Migration
       $table->decimal('platform_fee', 15, 2);
       $table->decimal('net_amount', 15, 2);
       $table->string('currency')->default('NGN');
+      $table->string('payment_method')->default('Paystack');
       $table->timestamp('payment_date')->useCurrent();
       $table->timestamps();
     });

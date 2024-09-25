@@ -15,7 +15,6 @@ class Project extends Model
     'required_skills',
     'budget',
     'duration',
-    'posted_at',
     'deadline_date',
   ];
 

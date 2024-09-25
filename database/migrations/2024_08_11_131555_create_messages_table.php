@@ -19,6 +19,7 @@ return new class extends Migration
       $table->text('content');
       $table->enum('status', ['sent', 'delivered', 'read'])->default('sent');
       $table->timestamp('read_at')->nullable();
+      $table->timestamp('sent_at')->useCurrent();
       $table->timestamps();
     });
   }

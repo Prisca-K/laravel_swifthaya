@@ -20,18 +20,7 @@ Route::get("/dashboard", [DashboardController::class, "index"])->middleware(['au
 
 Route::get("/individual/dashboard", [IndividualController::class, "index"])->middleware(['auth', 'verified', "can:individual"])->name('individual.dashboard');
 
-Route::middleware(['auth'])->group(function () {
-  // display form
-  Route::get('/payment', [PaymentController::class, 'init'])->name('payment.init');
 
-  Route::post('/payment_form', [PaymentController::class, 'index'])->name('payment.index');
-
-  // Callback route after payment
-  Route::get('/payment/callback', [PaymentController::class, 'handleCallback'])->name('payment.callback');
-
-  // Webhook route for payment notifications
-  Route::post('/payment/webhook', [PaymentController::class, 'handleWebhook'])->name('payment.webhook');
-});
 
 /* messsages */
 Route::middleware(['auth'])->group(function () {

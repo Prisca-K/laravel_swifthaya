@@ -12,7 +12,8 @@ Route::get("/all-jobs", [SwifthayajobController::class, "index"])->middleware(['
 
 Route::get("/jobs", [SwifthayajobController::class, "create"])->middleware(['auth', 'verified', 'can:company'])->name('job.create');
 
-Route::post("/jobs", [SwifthayajobController::class, "store"])->middleware(['auth', 'verified', 'can:company'])->name('job.store');
+Route::post("/jobs", 
+[SwifthayajobController::class, "store"])->middleware(['auth', 'verified', 'can:company'])->name('job.store');
 
 Route::get("/jobs/{job}", [SwifthayajobController::class, "show"])->middleware(['auth', 'verified', 'can:company'])->name('job.show');
 
@@ -35,13 +36,13 @@ Route::get("/job_search", [Talent_ProfileController::class, "job_search"])->midd
 
 /* applicants tracking */
 // job
-Route::get("job/{job}/applicants", [SwifthayajobController::class, "view_job_applicants"])->middleware(['auth', 'verified', "can:individual_company"])->name('job.applicants');
+// Route::get("job/{job}/applicants", [SwifthayajobController::class, "view_job_applicants"])->middleware(['auth', 'verified', "can:individual_company"])->name('job.applicants');
 
-//application
-// for talent to apply to job
-Route::get("job-{job}/apply", [ApplicationController::class, "job_apply"])->middleware(['auth', 'verified', "can:talent"])->name('job.apply');
+// //application
+// // for talent to apply to job
+// Route::get("job-{job}/apply", [ApplicationController::class, "job_apply"])->middleware(['auth', 'verified', "can:talent"])->name('job.apply');
 
-Route::post("job-{job}/apply", [ApplicationController::class, "job_store_application"])->middleware(['auth', 'verified', "can:talent"])->name('job.store_application');
+// Route::post("job-{job}/apply", [ApplicationController::class, "job_store_application"])->middleware(['auth', 'verified', "can:talent"])->name('job.store_application');
 
 
 Route::middleware('auth')->group(function () {
